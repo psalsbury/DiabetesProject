@@ -47,3 +47,7 @@ Copy the contents of `public_html/` to the live web root.
 - Glucose values are fictional independent checkpoints, not physiological predictions. The game reports readings in range rather than clinical time in range.
 - Care feedback links to Diabetes UK and NHS guidance; insulin decisions refer to the child's agreed care plan.
 - Run `node tests/sam-days.cjs` for the 90-day schedule, UK midnight/DST, content validation and 180 complete game-script runs.
+
+## Website language selector
+
+Every HTML page loads `language.js`. It adds a keyboard-accessible language menu with flags and native names for English (en), Urdu (ur), Somali (so), Arabic (ar), Farsi (fa), Portuguese (pt), Italian (it), and Swedish (sv). Non-English links open the current public page in Google's automatic website-translation view; English returns to the original site. No external translation resource loads until a link is selected. This is external machine translation, not built-in reviewed translations, and availability depends on Google Translate. Scores in a translated copy may use a separate browser origin. Bump the language.js version in all pages when updating it.
