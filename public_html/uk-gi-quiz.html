@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Glycemic Sort</title>
+<style>
+  :root {
+    --ink: #23201a;
+    --paper: #f6efdf;
+    --paper-edge: #e6dcc2;
+    --backdrop: #1f2a23;
+    --high: #a13d2c;
+    --high-soft: #f0d9cf;
+    --low: #2c6b57;
+    --low-soft: #d7e7de;
+    --gold: #c99a3c;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --sans: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: var(--backdrop);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.05), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.25), transparent 60%);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .stage {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 28px 18px 60px;
+    min-height: 100vh;
+  }
+
+  header.top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(28px, 6vw, 40px);
+    color: var(--paper);
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
+
+  .scoreline {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .subtitle {
+    font-family: var(--sans);
+    color: #b9c2ba;
+    font-size: 15px;
+    margin: 2px 0 26px;
+    line-height: 1.5;
+    max-width: 56ch;
+  }
+
+  .subtitle strong { color: var(--paper); font-weight: 600; }
+
+  .levels {
+    display: flex;
+    gap: 8px;
+    margin: 30px 0 8px;
+  }
+  .levels .dot {
+    flex: 1;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.12);
+    overflow: hidden;
+    position: relative;
+  }
+  .levels .dot.done { background: var(--gold); }
+  .levels .dot.current::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+
+  .tray {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    padding: 22px 14px;
+    margin-bottom: 22px;
+    background: rgba(0,0,0,0.18);
+    border-radius: 14px;
+    min-height: 120px;
+    align-content: flex-start;
+  }
+
+  .card {
+    width: 108px;
+    height: 104px;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 6px;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.15), 0 6px 14px rgba(0,0,0,0.18);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .card:active { cursor: grabbing; }
+  .card.selected {
+    box-shadow: 0 0 0 3px var(--gold), 0 6px 14px rgba(0,0,0,0.25);
+    transform: translateY(-2px);
+  }
+  .card.dragging {
+    position: fixed;
+    z-index: 50;
+    pointer-events: none;
+    box-shadow: 0 12px 26px rgba(0,0,0,0.4);
+    transform: scale(1.06) rotate(-2deg);
+  }
+  .card svg { width: 44px; height: 44px; }
+  .card .label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .card.placed { opacity: 0; transform: scale(0.7); pointer-events: none; }
+  .card.wrong-shake { animation: shake 0.4s ease; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(4px); }
+  }
+
+  .zones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 600px) {
+    .stage {
+      width: 100%;
+      padding: max(18px, env(safe-area-inset-top)) 10px
+               max(32px, env(safe-area-inset-bottom));
+    }
+
+    header.top {
+      align-items: center;
+      flex-wrap: nowrap;
+      margin-bottom: 4px;
+    }
+
+    h1 { font-size: clamp(27px, 9vw, 34px); }
+    .scoreline { font-size: 12px; }
+    .subtitle {
+      font-size: 14px;
+      margin: 4px 0 16px;
+    }
+
+    .levels { margin: 18px 0 8px; }
+
+    .tray {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+      min-height: 0;
+    }
+
+    .card {
+      width: 100%;
+      min-width: 0;
+      height: 88px;
+      padding: 6px 3px;
+      gap: 3px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .card svg { width: 36px; height: 36px; }
+    .card .label { font-size: 10px; line-height: 1.1; }
+
+    .zones {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .zone {
+      min-width: 0;
+      min-height: 132px;
+      padding: 12px 7px 14px;
+      border-radius: 12px;
+    }
+
+    .zone .icon { width: 25px; height: 25px; margin-bottom: 3px; }
+    .zone h2 { font-size: 18px; }
+    .zone p { font-size: 11px; line-height: 1.25; }
+    .zone .placed-row { gap: 4px; margin-top: 8px; }
+    .zone .chip {
+      max-width: 100%;
+      padding: 3px 7px;
+      font-size: 9.5px;
+      white-space: normal;
+    }
+
+    .overlay { padding: 14px; }
+    .panel {
+      width: min(100%, 380px);
+      max-height: calc(100dvh - 28px);
+      overflow-y: auto;
+      padding: 26px 20px;
+    }
+
+    button.next-btn {
+      min-height: 48px;
+      min-width: 150px;
+    }
+
+    footer.credit { margin-top: 22px; }
+  }
+
+  @media (max-width: 340px) {
+    .stage { padding-left: 7px; padding-right: 7px; }
+    .tray { gap: 6px; padding: 7px; }
+    .card { height: 82px; }
+    .card svg { width: 32px; height: 32px; }
+    .card .label { font-size: 9px; }
+    .zone { padding-left: 5px; padding-right: 5px; }
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    .stage { max-width: 960px; padding-top: 10px; }
+    .subtitle { margin-bottom: 8px; }
+    .levels { margin-top: 8px; }
+    .tray { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .card { height: 76px; }
+    .zones { grid-template-columns: repeat(2, 1fr); }
+    .zone { min-height: 104px; }
+  }
+
+  .zone {
+    border-radius: 14px;
+    padding: 18px 14px 22px;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 2px dashed transparent;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .zone.high { background: var(--high-soft); }
+  .zone.low  { background: var(--low-soft); }
+  .zone.hover.high { border-color: var(--high); background: #f4c9b8; }
+  .zone.hover.low  { border-color: var(--low);  background: #bfe0d1; }
+
+  .zone .icon { width: 30px; height: 30px; margin-bottom: 6px; }
+  .zone h2 {
+    font-family: var(--serif);
+    font-size: 20px;
+    margin: 0 0 2px;
+  }
+  .zone.high h2 { color: var(--high); }
+  .zone.low h2 { color: var(--low); }
+  .zone p {
+    font-size: 12.5px;
+    margin: 0;
+    color: #4a4238;
+    max-width: 22ch;
+  }
+  .zone .placed-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .zone .chip {
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.65);
+    border-radius: 20px;
+    padding: 4px 10px;
+    color: var(--ink);
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translate(-50%, 20px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+    z-index: 60;
+    max-width: 86vw;
+    text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast.correct { background: var(--low); }
+  .toast.incorrect { background: var(--high); }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 20, 17, 0.88);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 70;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .panel {
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 34px 30px;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .panel h2 {
+    font-family: var(--serif);
+    font-size: 26px;
+    margin: 0 0 8px;
+  }
+  .panel p { font-size: 14.5px; color: #4a4238; margin: 0 0 22px; line-height: 1.5; }
+  .panel .big-score { font-size: 15px; font-weight: 700; color: var(--gold); display: block; margin-bottom: 4px; }
+  button.next-btn {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--paper);
+    background: var(--ink);
+    border: none;
+    border-radius: 30px;
+    padding: 13px 28px;
+    cursor: pointer;
+  }
+  button.next-btn:active { transform: translateY(1px); }
+
+  footer.credit {
+    text-align: center;
+    color: #6b7469;
+    font-size: 11.5px;
+    margin-top: 34px;
+  }
+  /* Final mobile overrides live after component rules so the cascade stays predictable. */
+  @media (max-width: 600px) {
+    .zone {
+      min-width: 0;
+      min-height: 132px;
+      padding: 12px 7px 14px;
+      border-radius: 12px;
+    }
+    .zone .icon { width: 25px; height: 25px; margin-bottom: 3px; }
+    .zone h2 { font-size: 18px; }
+    .zone p { font-size: 11px; line-height: 1.25; }
+    .zone .placed-row { gap: 4px; margin-top: 8px; }
+    .zone .chip {
+      max-width: 100%;
+      padding: 3px 7px;
+      font-size: 9.5px;
+      white-space: normal;
+    }
+    .overlay { padding: 14px; }
+    .panel {
+      width: min(100%, 380px);
+      max-height: calc(100dvh - 28px);
+      overflow-y: auto;
+      padding: 26px 20px;
+    }
+    button.next-btn {
+      min-width: 150px;
+      min-height: 48px;
+    }
+    footer.credit { margin-top: 22px; }
+  }
+
+  @media (max-width: 340px) {
+    .zone { padding-left: 5px; padding-right: 5px; }
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    .zone { min-height: 104px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <header class="top">
+    <h1>Glycemic Sort</h1>
+    <div class="scoreline" id="scoreline">Score 0 / 0</div>
+  </header>
+  <p class="subtitle" id="subtitle">
+    Drag each <strong id="levelName">bread</strong> into the correct box — or tap a card, then tap High or Low.
+  </p>
+
+  <div class="levels" id="levels"></div>
+
+  <div class="tray" id="tray"></div>
+
+  <div class="zones">
+    <div class="zone high" data-zone="high" id="zoneHigh">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 6"></polyline><polyline points="15 6 21 6 21 12"></polyline></svg>
+      <h2>High GI</h2>
+      <p>Digested fast &mdash; causes a sharp blood sugar spike</p>
+      <div class="placed-row" id="placedHigh"></div>
+    </div>
+    <div class="zone low" data-zone="low" id="zoneLow">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="14" x2="9" y2="14"></line><line x1="9" y1="14" x2="15" y2="11"></line><line x1="15" y1="11" x2="21" y2="12"></line></svg>
+      <h2>Low GI</h2>
+      <p>Digested slowly &mdash; releases energy at a steady pace</p>
+      <div class="placed-row" id="placedLow"></div>
+    </div>
+  </div>
+
+  <footer class="credit">Glycemic index values are typical/average figures &mdash; real foods vary by ripeness, cooking method and brand.</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="overlay" id="overlay">
+  <div class="panel">
+    <h2 id="panelTitle">Level complete</h2>
+    <span class="big-score" id="panelScore"></span>
+    <p id="panelText"></p>
+    <button class="next-btn" id="panelBtn">Next level</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Icons: one distinct flat-colour illustration per food ----------
+  var ICONS = {
+    // BREADS
+    seededWholemeal:
+      '<svg viewBox="0 0 64 64"><path d="M12 24 Q32 6 52 24 L52 54 Q32 58 12 54 Z" fill="#9a6a35"/><path d="M16 28 Q32 14 48 28 L48 52 Q32 55 16 52 Z" fill="#e6c48c"/>' +
+      '<circle cx="24" cy="36" r="1.6" fill="#6b4423"/><circle cx="30" cy="42" r="1.6" fill="#6b4423"/><circle cx="36" cy="34" r="1.6" fill="#6b4423"/><circle cx="41" cy="44" r="1.6" fill="#6b4423"/><circle cx="27" cy="47" r="1.6" fill="#6b4423"/>' +
+      '</svg>',
+    pumpernickel:
+      '<svg viewBox="0 0 64 64"><path d="M12 26 Q32 10 52 26 L52 54 Q32 58 12 54 Z" fill="#2b1a10"/><path d="M16 30 Q32 18 48 30 L48 52 Q32 55 16 52 Z" fill="#4a2f1d"/>' +
+      '<circle cx="26" cy="38" r="1.4" fill="#c9a869"/><circle cx="35" cy="43" r="1.4" fill="#c9a869"/><circle cx="30" cy="34" r="1.4" fill="#c9a869"/>' +
+      '</svg>',
+    sourdough:
+      '<svg viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="24" ry="19" fill="#b9803f"/><ellipse cx="32" cy="34" rx="20" ry="16" fill="#e9c98a"/>' +
+      '<path d="M18 24 L34 42" stroke="#b9803f" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M26 20 L44 38" stroke="#b9803f" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M34 20 L48 32" stroke="#b9803f" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
+      '</svg>',
+    whiteBread:
+      '<svg viewBox="0 0 64 64"><path d="M12 26 Q32 8 52 26 L52 54 Q32 58 12 54 Z" fill="#e2b97a"/><path d="M16 30 Q32 16 48 30 L48 52 Q32 55 16 52 Z" fill="#f7f0dd"/></svg>',
+    bagel:
+      '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="#c99a52"/><circle cx="32" cy="32" r="9" fill="#1f2a23"/><circle cx="32" cy="32" r="24" fill="none" stroke="#a97a3a" stroke-width="2"/></svg>',
+    baguette:
+      '<svg viewBox="0 0 64 64"><rect x="6" y="26" width="52" height="16" rx="8" fill="#d6a75a"/>' +
+      '<path d="M16 24 L20 34" stroke="#8a5a2b" stroke-width="2" stroke-linecap="round"/><path d="M27 22 L31 34" stroke="#8a5a2b" stroke-width="2" stroke-linecap="round"/><path d="M38 22 L42 34" stroke="#8a5a2b" stroke-width="2" stroke-linecap="round"/><path d="M49 24 L52 34" stroke="#8a5a2b" stroke-width="2" stroke-linecap="round"/>' +
+      '</svg>',
+
+    // RICE
+    basmati:
+      '<svg viewBox="0 0 64 64"><path d="M8 32 Q32 50 56 32 L52 46 Q32 56 12 46 Z" fill="#2f5b68"/><ellipse cx="32" cy="30" rx="22" ry="11" fill="#faf6ea"/>' +
+      '<path d="M22 28 L28 32" stroke="#cfc8a8" stroke-width="1.6" stroke-linecap="round"/><path d="M30 24 L36 28" stroke="#cfc8a8" stroke-width="1.6" stroke-linecap="round"/><path d="M36 30 L42 34" stroke="#cfc8a8" stroke-width="1.6" stroke-linecap="round"/>' +
+      '</svg>',
+    easyCook:
+      '<svg viewBox="0 0 64 64"><path d="M8 32 Q32 50 56 32 L52 46 Q32 56 12 46 Z" fill="#2f5b68"/><ellipse cx="32" cy="30" rx="22" ry="11" fill="#f2e6bd"/>' +
+      '<ellipse cx="24" cy="28" rx="2.4" ry="1.4" fill="#d8c48a"/><ellipse cx="32" cy="24" rx="2.4" ry="1.4" fill="#d8c48a"/><ellipse cx="40" cy="29" rx="2.4" ry="1.4" fill="#d8c48a"/>' +
+      '</svg>',
+    brownRice:
+      '<svg viewBox="0 0 64 64"><path d="M8 32 Q32 50 56 32 L52 46 Q32 56 12 46 Z" fill="#2f5b68"/><ellipse cx="32" cy="30" rx="22" ry="11" fill="#c79c66"/>' +
+      '<ellipse cx="24" cy="28" rx="2.2" ry="1.3" fill="#7a5330"/><ellipse cx="33" cy="24" rx="2.2" ry="1.3" fill="#7a5330"/><ellipse cx="41" cy="30" rx="2.2" ry="1.3" fill="#7a5330"/>' +
+      '</svg>',
+    jasmine:
+      '<svg viewBox="0 0 64 64"><path d="M8 32 Q32 50 56 32 L52 46 Q32 56 12 46 Z" fill="#2f5b68"/><ellipse cx="32" cy="30" rx="22" ry="11" fill="#fffdf6"/>' +
+      '<ellipse cx="23" cy="27" rx="2" ry="1.2" fill="#e5dfc8"/><ellipse cx="32" cy="23" rx="2" ry="1.2" fill="#e5dfc8"/><ellipse cx="41" cy="28" rx="2" ry="1.2" fill="#e5dfc8"/>' +
+      '</svg>',
+    risotto:
+      '<svg viewBox="0 0 64 64"><ellipse cx="32" cy="40" rx="26" ry="9" fill="#d8d3c4"/><ellipse cx="32" cy="32" rx="18" ry="13" fill="#f0d98c"/>' +
+      '<ellipse cx="25" cy="30" rx="2" ry="1.2" fill="#e2c065"/><ellipse cx="34" cy="27" rx="2" ry="1.2" fill="#e2c065"/><ellipse cx="39" cy="34" rx="2" ry="1.2" fill="#e2c065"/>' +
+      '</svg>',
+    stickyRice:
+      '<svg viewBox="0 0 64 64"><path d="M14 44 L32 52 L50 44 L38 20 L26 20 Z" fill="#3f7a4a"/><ellipse cx="32" cy="34" rx="15" ry="13" fill="#fffdf6"/>' +
+      '<path d="M22 32 Q32 26 42 32" stroke="#e5dfc8" stroke-width="1.6" fill="none"/><path d="M22 38 Q32 33 42 38" stroke="#e5dfc8" stroke-width="1.6" fill="none"/>' +
+      '</svg>',
+
+    // PASTA
+    spaghetti:
+      '<svg viewBox="0 0 64 64"><path d="M14 44 Q10 30 24 24 Q34 20 30 32 Q26 42 38 38 Q48 34 44 22" fill="none" stroke="#e6c26a" stroke-width="5" stroke-linecap="round"/>' +
+      '<path d="M18 46 Q16 32 28 26" fill="none" stroke="#f2d688" stroke-width="4" stroke-linecap="round"/></svg>',
+    wholewheatPasta:
+      '<svg viewBox="0 0 64 64"><path d="M14 44 Q10 30 24 24 Q34 20 30 32 Q26 42 38 38 Q48 34 44 22" fill="none" stroke="#a9743c" stroke-width="5" stroke-linecap="round"/>' +
+      '<path d="M18 46 Q16 32 28 26" fill="none" stroke="#c48f52" stroke-width="4" stroke-linecap="round"/></svg>',
+    eggNoodles:
+      '<svg viewBox="0 0 64 64"><path d="M10 24 Q18 18 26 24 Q34 30 42 24 Q50 18 56 24" stroke="#f2d97f" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+      '<path d="M10 34 Q18 28 26 34 Q34 40 42 34 Q50 28 56 34" stroke="#f2d97f" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+      '<path d="M10 44 Q18 38 26 44 Q34 50 42 44 Q50 38 56 44" stroke="#f2d97f" stroke-width="5" fill="none" stroke-linecap="round"/></svg>',
+    instantNoodles:
+      '<svg viewBox="0 0 64 64"><rect x="12" y="16" width="40" height="34" rx="4" fill="#e3b455"/>' +
+      '<path d="M16 22 Q22 26 28 22 Q34 18 40 22 Q46 26 50 22" stroke="#b9812f" stroke-width="2" fill="none"/>' +
+      '<path d="M16 30 Q22 34 28 30 Q34 26 40 30 Q46 34 50 30" stroke="#b9812f" stroke-width="2" fill="none"/>' +
+      '<path d="M16 38 Q22 42 28 38 Q34 34 40 38 Q46 42 50 38" stroke="#b9812f" stroke-width="2" fill="none"/>' +
+      '<path d="M16 46 Q22 50 28 46 Q34 42 40 46 Q46 50 50 46" stroke="#b9812f" stroke-width="2" fill="none"/></svg>',
+    glutenFreePasta:
+      '<svg viewBox="0 0 64 64"><rect x="10" y="30" width="14" height="22" rx="6" fill="#f0e2b0" transform="rotate(-18 17 41)"/>' +
+      '<rect x="26" y="24" width="14" height="26" rx="6" fill="#ecdba0" transform="rotate(10 33 37)"/>' +
+      '<rect x="42" y="30" width="13" height="22" rx="6" fill="#f0e2b0" transform="rotate(-8 48 41)"/></svg>',
+    gnocchi:
+      '<svg viewBox="0 0 64 64"><ellipse cx="22" cy="38" rx="10" ry="8" fill="#eecf8e"/><ellipse cx="40" cy="30" rx="10" ry="8" fill="#eecf8e"/><ellipse cx="34" cy="46" rx="10" ry="8" fill="#e6c37c"/>' +
+      '<path d="M18 38 L26 38" stroke="#c9a35f" stroke-width="1.6"/><path d="M36 30 L44 30" stroke="#c9a35f" stroke-width="1.6"/><path d="M30 46 L38 46" stroke="#c9a35f" stroke-width="1.6"/></svg>',
+
+    // POTATOES
+    newPotatoes:
+      '<svg viewBox="0 0 64 64"><ellipse cx="24" cy="38" rx="12" ry="10" fill="#e6d2a3"/><ellipse cx="40" cy="32" rx="10" ry="9" fill="#e2cc9a"/><ellipse cx="36" cy="46" rx="9" ry="8" fill="#dbc38c"/>' +
+      '<circle cx="22" cy="37" r="1.2" fill="#9c7d45"/><circle cx="40" cy="31" r="1.2" fill="#9c7d45"/><circle cx="35" cy="46" r="1.2" fill="#9c7d45"/></svg>',
+    sweetPotato:
+      '<svg viewBox="0 0 64 64"><path d="M12 34 Q10 20 26 18 Q46 16 52 30 Q54 42 40 46 Q20 50 12 34 Z" fill="#a5461c"/>' +
+      '<ellipse cx="32" cy="32" rx="14" ry="9" fill="#f0902e"/></svg>',
+    charlottePotatoes:
+      '<svg viewBox="0 0 64 64"><ellipse cx="24" cy="34" rx="14" ry="10" fill="#d9b466"/><ellipse cx="42" cy="40" rx="12" ry="9" fill="#e0bd75"/>' +
+      '<circle cx="20" cy="33" r="1.2" fill="#9c7838"/><circle cx="28" cy="37" r="1.2" fill="#9c7838"/><circle cx="44" cy="39" r="1.2" fill="#9c7838"/></svg>',
+    jacketPotato:
+      '<svg viewBox="0 0 64 64"><path d="M8 40 Q6 22 32 20 Q58 22 56 40 Q32 46 8 40 Z" fill="#7a4a24"/>' +
+      '<path d="M12 38 Q32 30 52 38 Q46 42 32 42 Q18 42 12 38 Z" fill="#f7f2e2"/>' +
+      '<rect x="27" y="30" width="10" height="6" rx="1.5" fill="#e8b93f"/></svg>',
+    mashedPotato:
+      '<svg viewBox="0 0 64 64"><ellipse cx="32" cy="46" rx="24" ry="7" fill="#d8d3c4"/><path d="M12 44 Q10 24 32 22 Q54 24 52 44 Q32 50 12 44 Z" fill="#f5ecd6"/>' +
+      '<path d="M18 32 Q32 26 46 32" stroke="#e2d6ae" stroke-width="1.6" fill="none"/><rect x="28" y="20" width="9" height="6" rx="1.5" fill="#e8b93f"/></svg>',
+    chips:
+      '<svg viewBox="0 0 64 64"><rect x="12" y="18" width="8" height="34" rx="2" fill="#e8b04a" transform="rotate(-6 16 35)"/>' +
+      '<rect x="23" y="12" width="8" height="40" rx="2" fill="#eebd5f" transform="rotate(3 27 32)"/>' +
+      '<rect x="34" y="16" width="8" height="36" rx="2" fill="#e8b04a" transform="rotate(-3 38 34)"/>' +
+      '<rect x="45" y="20" width="8" height="32" rx="2" fill="#eebd5f" transform="rotate(7 49 36)"/></svg>'
+  };
+
+  // ---------- Level data (typical glycemic index values, UK-familiar foods) ----------
+  var LEVELS = [
+    {
+      key: "bread", name: "bread", title: "Breads",
+      items: [
+        { name: "Seeded wholemeal bread", gi: "low", icon: "seededWholemeal" },
+        { name: "Pumpernickel bread", gi: "low", icon: "pumpernickel" },
+        { name: "Sourdough bread", gi: "low", icon: "sourdough" },
+        { name: "White bread", gi: "high", icon: "whiteBread" },
+        { name: "Bagel", gi: "high", icon: "bagel" },
+        { name: "French baguette", gi: "high", icon: "baguette" }
+      ]
+    },
+    {
+      key: "rice", name: "rice", title: "Rice",
+      items: [
+        { name: "Basmati rice", gi: "low", icon: "basmati" },
+        { name: "Easy-cook rice", gi: "low", icon: "easyCook" },
+        { name: "Brown rice", gi: "low", icon: "brownRice" },
+        { name: "Jasmine rice", gi: "high", icon: "jasmine" },
+        { name: "Risotto (arborio) rice", gi: "high", icon: "risotto" },
+        { name: "Sticky rice", gi: "high", icon: "stickyRice" }
+      ]
+    },
+    {
+      key: "pasta", name: "pasta", title: "Pasta",
+      items: [
+        { name: "Spaghetti", gi: "low", icon: "spaghetti" },
+        { name: "Wholewheat pasta", gi: "low", icon: "wholewheatPasta" },
+        { name: "Egg noodles", gi: "low", icon: "eggNoodles" },
+        { name: "Instant noodles", gi: "high", icon: "instantNoodles" },
+        { name: "Gluten-free pasta", gi: "high", icon: "glutenFreePasta" },
+        { name: "Gnocchi", gi: "high", icon: "gnocchi" }
+      ]
+    },
+    {
+      key: "potato", name: "potato", title: "Potatoes",
+      items: [
+        { name: "New potatoes", gi: "low", icon: "newPotatoes" },
+        { name: "Sweet potato", gi: "low", icon: "sweetPotato" },
+        { name: "Charlotte potatoes", gi: "low", icon: "charlottePotatoes" },
+        { name: "Jacket potato", gi: "high", icon: "jacketPotato" },
+        { name: "Mashed potato", gi: "high", icon: "mashedPotato" },
+        { name: "Chips", gi: "high", icon: "chips" }
+      ]
+    }
+  ];
+
+  // ---------- State ----------
+  var levelIndex = 0;
+  var totalScore = 0;
+  var totalPossible = 0;
+  var levelScore = 0;
+  var placedCount = 0;
+  var currentItems = [];
+
+  // ---------- Elements ----------
+  var trayEl = document.getElementById("tray");
+  var levelsEl = document.getElementById("levels");
+  var scorelineEl = document.getElementById("scoreline");
+  var levelNameEl = document.getElementById("levelName");
+  var toastEl = document.getElementById("toast");
+  var overlayEl = document.getElementById("overlay");
+  var panelTitleEl = document.getElementById("panelTitle");
+  var panelScoreEl = document.getElementById("panelScore");
+  var panelTextEl = document.getElementById("panelText");
+  var panelBtnEl = document.getElementById("panelBtn");
+  var placedHighEl = document.getElementById("placedHigh");
+  var placedLowEl = document.getElementById("placedLow");
+  var zoneHighEl = document.getElementById("zoneHigh");
+  var zoneLowEl = document.getElementById("zoneLow");
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function renderLevelDots() {
+    levelsEl.innerHTML = "";
+    LEVELS.forEach(function (lvl, i) {
+      var d = document.createElement("div");
+      d.className = "dot" + (i < levelIndex ? " done" : "") + (i === levelIndex ? " current" : "");
+      levelsEl.appendChild(d);
+    });
+  }
+
+  function updateScoreline() {
+    scorelineEl.textContent = "Score " + totalScore + " / " + totalPossible;
+  }
+
+  function showToast(text, kind) {
+    toastEl.textContent = text;
+    toastEl.className = "toast show" + (kind ? " " + kind : "");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function () {
+      toastEl.classList.remove("show");
+    }, 1100);
+  }
+
+  function startLevel(i) {
+    levelIndex = i;
+    var lvl = LEVELS[levelIndex];
+    levelScore = 0;
+    placedCount = 0;
+    currentItems = shuffle(lvl.items);
+    totalPossible += lvl.items.length;
+
+    levelNameEl.textContent = lvl.name;
+    placedHighEl.innerHTML = "";
+    placedLowEl.innerHTML = "";
+    renderLevelDots();
+    updateScoreline();
+    buildTray();
+  }
+
+  function buildTray() {
+    trayEl.innerHTML = "";
+    currentItems.forEach(function (item, idx) {
+      var card = document.createElement("div");
+      card.className = "card";
+      card.dataset.idx = idx;
+      card.innerHTML = ICONS[item.icon] + '<div class="label">' + item.name + "</div>";
+      trayEl.appendChild(card);
+      attachDrag(card, item);
+    });
+  }
+
+  function pointInside(x, y, el) {
+    var r = el.getBoundingClientRect();
+    return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+  }
+
+  function attachDrag(card, item) {
+    var startX, startY, origRect, dragging = false;
+
+    card.addEventListener("pointerdown", function (e) {
+      if (card.classList.contains("placed")) return;
+      e.preventDefault();
+      card.setPointerCapture(e.pointerId);
+      dragging = false;
+      startX = e.clientX;
+      startY = e.clientY;
+      origRect = card.getBoundingClientRect();
+
+      function onMove(ev) {
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        if (!dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragging = true;
+          card.classList.add("dragging");
+          card.style.width = origRect.width + "px";
+          card.style.height = origRect.height + "px";
+          card.style.left = origRect.left + "px";
+          card.style.top = origRect.top + "px";
+        }
+        if (dragging) {
+          card.style.left = (origRect.left + dx) + "px";
+          card.style.top = (origRect.top + dy) + "px";
+          var overHigh = pointInside(ev.clientX, ev.clientY, zoneHighEl);
+          var overLow = pointInside(ev.clientX, ev.clientY, zoneLowEl);
+          zoneHighEl.classList.toggle("hover", overHigh);
+          zoneLowEl.classList.toggle("hover", overLow);
+        }
+      }
+
+      function onUp(ev) {
+        card.releasePointerCapture(e.pointerId);
+        card.removeEventListener("pointermove", onMove);
+        card.removeEventListener("pointerup", onUp);
+        card.removeEventListener("pointercancel", onUp);
+        zoneHighEl.classList.remove("hover");
+        zoneLowEl.classList.remove("hover");
+
+        if (dragging) {
+          card.classList.remove("dragging");
+          card.style.left = "";
+          card.style.top = "";
+          card.style.width = "";
+          card.style.height = "";
+          var overHigh = pointInside(ev.clientX, ev.clientY, zoneHighEl);
+          var overLow = pointInside(ev.clientX, ev.clientY, zoneLowEl);
+          if (overHigh) handleDrop(card, item, "high");
+          else if (overLow) handleDrop(card, item, "low");
+        } else {
+          selectCard(card, item);
+        }
+      }
+
+      card.addEventListener("pointermove", onMove);
+      card.addEventListener("pointerup", onUp);
+      card.addEventListener("pointercancel", onUp);
+    });
+  }
+
+  var selected = null;
+  function selectCard(card, item) {
+    if (selected && selected.card === card) {
+      card.classList.remove("selected");
+      selected = null;
+      return;
+    }
+    if (selected) selected.card.classList.remove("selected");
+    card.classList.add("selected");
+    selected = { card: card, item: item };
+  }
+
+  [zoneHighEl, zoneLowEl].forEach(function (zone) {
+    zone.addEventListener("click", function () {
+      if (!selected) return;
+      handleDrop(selected.card, selected.item, zone.dataset.zone);
+      selected = null;
+    });
+  });
+
+  function handleDrop(card, item, zoneChoice) {
+    card.classList.remove("selected");
+    var correct = item.gi === zoneChoice;
+    if (correct) {
+      card.classList.add("placed");
+      var chip = document.createElement("div");
+      chip.className = "chip";
+      chip.textContent = item.name;
+      (zoneChoice === "high" ? placedHighEl : placedLowEl).appendChild(chip);
+      levelScore++;
+      totalScore++;
+      placedCount++;
+      showToast(item.name + " is " + zoneChoice + " GI \u2014 correct!", "correct");
+      updateScoreline();
+      if (placedCount === currentItems.length) {
+        setTimeout(showLevelComplete, 550);
+      }
+    } else {
+      card.classList.add("wrong-shake");
+      showToast("Not quite \u2014 try the other box", "incorrect");
+      setTimeout(function () { card.classList.remove("wrong-shake"); }, 420);
+    }
+  }
+
+  function showLevelComplete() {
+    var lvl = LEVELS[levelIndex];
+    var isLast = levelIndex === LEVELS.length - 1;
+    panelTitleEl.textContent = isLast ? "All levels complete" : lvl.title + " complete";
+    panelScoreEl.textContent = "Level score: " + levelScore + " / " + currentItems.length;
+    panelTextEl.textContent = isLast
+      ? "You've sorted breads, rice, pasta and potatoes by glycemic index. Final score: " + totalScore + " / " + totalPossible + "."
+      : "Next up: " + LEVELS[levelIndex + 1].name + ".";
+    panelBtnEl.textContent = isLast ? "Play again" : "Next level";
+    overlayEl.classList.add("show");
+  }
+
+  panelBtnEl.addEventListener("click", function () {
+    overlayEl.classList.remove("show");
+    if (levelIndex === LEVELS.length - 1) {
+      totalScore = 0;
+      totalPossible = 0;
+      startLevel(0);
+    } else {
+      startLevel(levelIndex + 1);
+    }
+  });
+
+  startLevel(0);
+})();
+</script>
+
+</body>
+</html>

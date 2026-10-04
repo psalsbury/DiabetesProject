@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173f35">
+<title>Type 1 Diabetes Parent Skills Quiz | Diabetes Learning Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--forest:#173f35;--green:#2f7d61;--mint:#dff1e8;--cream:#fbf8f0;--ink:#1d2e29;--muted:#65766f;--line:#dbe6df;--red:#a53d48;--redp:#fff0f1;--amber:#8a5a12;--amberp:#fff6df;--white:#fff}
+body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'DM Sans',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
+.shell{width:min(100%,790px);margin:auto;background:rgba(255,255,255,.96);border:1px solid #fff;border-radius:26px;box-shadow:0 28px 80px rgba(23,63,53,.15);overflow:hidden}
+header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px);border-bottom:1px solid var(--line)}
+.logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--forest);color:#fff;font-size:21px}
+.brand{font-weight:700;color:var(--forest)}.brand span{color:var(--green)}
+.home{margin-left:auto;color:var(--green);font-size:13px;font-weight:700;text-decoration:none}.home:hover{text-decoration:underline}
+main{padding:clamp(24px,5vw,46px)}
+.screen{display:none}.screen.active{display:block}
+.eyebrow{margin-bottom:12px;color:var(--green);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color:var(--forest)}
+.lead{margin:18px 0 24px;color:var(--muted);line-height:1.65}
+.safety{margin:20px 0;padding:15px 17px;color:#704b0f;background:var(--amberp);border:1px solid #efd9a7;border-radius:13px;font-size:13px;line-height:1.55}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:12px;color:#fff;background:var(--forest);font:700 15px 'DM Sans';cursor:pointer}
+.btn:hover{filter:brightness(1.08)}.btn:focus-visible,.option:focus-visible{outline:3px solid #e7ae43;outline-offset:3px}
+.progress{height:8px;margin-bottom:16px;background:#edf3ef;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--green),#69b893);transition:width .25s}
+.meta{display:flex;justify-content:space-between;margin-bottom:22px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.question{min-height:92px;margin-bottom:20px;font:600 clamp(23px,4vw,31px)/1.22 'Fraunces',serif;color:var(--forest)}
+.options{display:grid;gap:10px}.option{width:100%;min-height:54px;padding:13px 15px;text-align:left;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:13px;font:600 14px/1.4 'DM Sans';cursor:pointer}
+.option:not(:disabled):hover{border-color:#89bca6;background:#f7fbf9}.option:disabled{cursor:default}.option.correct{color:#075d49;background:var(--mint);border-color:var(--green)}.option.wrong{color:#8c2f3a;background:var(--redp);border-color:var(--red)}.option.dim{opacity:.52}
+.feedback{min-height:132px;margin-top:14px;padding:14px 16px;border:1px solid transparent;border-radius:13px;visibility:hidden;font-size:13px;line-height:1.5}.feedback.show{visibility:visible}.feedback.good{color:#075d49;background:var(--mint);border-color:#b2ddcc}.feedback.try{color:#704b0f;background:var(--amberp);border-color:#efd9a7}
+.evidence{display:inline-block;margin-top:8px;color:inherit;font-weight:700}.nextrow{min-height:58px;margin-top:10px}.next{visibility:hidden}.next.show{visibility:visible}
+.score{display:grid;place-items:center;width:118px;height:118px;margin:0 auto 20px;color:#fff;background:var(--forest);border-radius:50%;font:700 35px 'Fraunces',serif}.result{text-align:center}.result h2{font:700 34px 'Fraunces',serif;color:var(--forest)}.result p{margin:12px auto 24px;max-width:560px;color:var(--muted);line-height:1.6}
+.reminder{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.55}
+@media(max-width:560px){body{padding:0;background:#fff}.shell{min-height:100dvh;border:0;border-radius:0;box-shadow:none}header{padding:15px}.brand{font-size:14px}main{padding:24px 14px}.question{min-height:108px}.feedback{min-height:154px}.option{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="index.html">Home</a></header>
+<main>
+<section id="welcome" class="screen active">
+<div class="eyebrow">For parents and carers · Type 1 diabetes</div>
+<h1>Everyday decisions, safer responses.</h1>
+<p class="lead">Ten practical scenarios to reinforce the essentials of supporting a child with Type 1 diabetes—from hypos and ketones to exercise and knowing when to get help.</p>
+<div class="safety"><strong>Important:</strong> Use your child’s written care plan, prescribed insulin doses and hypo treatment amounts. If they may have diabetic ketoacidosis, are unconscious, having a seizure or not recovering, seek urgent medical help.</div>
+<button class="btn" onclick="startQuiz()">Start parent skills quiz →</button>
+<p class="reminder">Education only. This quiz cannot replace training or advice from your child’s paediatric diabetes team.</p>
+</section>
+<section id="quiz" class="screen" aria-live="polite">
+<div class="progress"><div class="fill" id="fill"></div></div>
+<div class="meta"><span id="counter"></span><span id="running"></span></div>
+<h1 class="question" id="question"></h1>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback"></div>
+<div class="nextrow"><button class="btn next" id="next" onclick="nextQuestion()">Next question →</button></div>
+</section>
+<section id="results" class="screen result">
+<div class="score" id="score"></div>
+<h2 id="result-title">Well done</h2>
+<p id="result-copy"></p>
+<button class="btn" onclick="startQuiz()">Try again</button>
+<p class="reminder">Keep your child’s diabetes-team and out-of-hours numbers, hypo treatment, glucagon and ketone-testing supplies easy to find. Share the child’s current care plan with everyone responsible for them.</p>
+</section>
+</main>
+</div>
+<script>
+const questions=[
+{q:"Your child is unwell and eating very little. What should happen to their insulin?",o:["Stop all insulin until they eat normally","Continue insulin according to their sick-day plan and contact the diabetes team if unsure","Give only sugary drinks and wait"],a:1,e:"Insulin should not be stopped during illness, even when a child is not eating. Follow the individual sick-day plan and seek advice when needed.",s:"https://www.nhs.uk/conditions/diabetic-ketoacidosis/",l:"NHS: preventing diabetic ketoacidosis"},
+{q:"Your child is awake, able to swallow and has a hypo. What is the best first response?",o:["Use their agreed amount of fast-acting carbohydrate, then recheck as their plan directs","Give a large high-fat meal immediately","Wait to see whether the glucose rises without treatment"],a:0,e:"Treat a hypo promptly with the child-specific amount of fast-acting carbohydrate. Children may need less than the adult amount, so follow the diabetes team’s plan.",s:"https://www.diabetes.org.uk/about-diabetes/looking-after-diabetes/complications/hypos",l:"Diabetes UK: treating hypos"},
+{q:"Your child is unconscious during a severe hypo. What should you do?",o:["Give food or drink by mouth","Leave them sitting upright and wait","Do not give anything by mouth; use the recovery position, give glucagon if trained and call for emergency help"],a:2,e:"An unconscious child may choke, so never give food or drink by mouth. Follow severe-hypo training, use glucagon if available and you know how, and call emergency services as directed.",s:"https://www.diabetes.org.uk/about-diabetes/looking-after-diabetes/complications/hypos",l:"Diabetes UK: severe hypoglycaemia"},
+{q:"When should you consider checking your child’s ketones?",o:["Only at the annual clinic appointment","When glucose is high at the level set by their team, or when they are ill","Only after exercise"],a:1,e:"Ketones should be checked when glucose is high at the threshold agreed with the diabetes team and when the child is ill. Pump users and young children can deteriorate more quickly.",s:"https://www.diabetes.org.uk/living-with-diabetes/life-with-diabetes/children-and-diabetes/testing-blood-glucose",l:"Diabetes UK: testing and your child"},
+{q:"Which group of symptoms may indicate diabetic ketoacidosis (DKA)?",o:["Fruity-smelling breath, vomiting, stomach pain and deep breathing","A mild bruise with normal glucose","Hunger immediately before lunch"],a:0,e:"DKA warning signs include thirst and frequent urination, abdominal pain, nausea or vomiting, deep breathing, fruity-smelling breath, tiredness or confusion. DKA can be life-threatening.",s:"https://www.nhs.uk/conditions/diabetic-ketoacidosis/",l:"NHS: DKA symptoms and urgent help"},
+{q:"Before exercise, your child’s glucose is high and ketones are present. What is the safest general response?",o:["Start vigorous exercise to lower the glucose","Do not exercise until ketones have cleared; follow the child’s plan and seek advice as needed","Ignore the ketones if the child feels well"],a:1,e:"Exercise with raised ketones can be unsafe. Diabetes UK advises avoiding activity until ketones have gone and following the child’s diabetes plan.",s:"https://www.diabetes.org.uk/living-with-diabetes/life-with-diabetes/children-and-diabetes/physical-activity",l:"Diabetes UK: physical activity and your child"},
+{q:"Which is a sensible set of times to monitor glucose, according to the child’s individual plan?",o:["Only when symptoms appear","Before main meals and bed, when unwell, around activity and whenever a high or low is suspected","Once each weekend"],a:1,e:"Regular monitoring helps identify highs, lows and patterns. Timing should follow the child’s plan and may include meals, bedtime, illness, exercise and symptoms.",s:"https://www.diabetes.org.uk/living-with-diabetes/life-with-diabetes/children-and-diabetes/testing-blood-glucose",l:"Diabetes UK: blood glucose testing"},
+{q:"Glucose remains high and the child’s insulin correction is not working. What should you do?",o:["Keep repeating corrections without checking the plan","Contact the diabetes care team urgently or NHS 111, following the child’s sick-day guidance","Stop monitoring for a few hours"],a:1,e:"Persistent high glucose that is not responding to insulin needs urgent advice, even if ketones are normal. Follow the care plan and contact the diabetes team or NHS 111.",s:"https://www.nhs.uk/conditions/diabetic-ketoacidosis/",l:"NHS: when to get urgent advice"},
+{q:"Why is recording glucose results, insulin, food, activity and unusual events useful?",o:["It helps reveal patterns that the family and diabetes team can use to adjust the plan","It guarantees glucose will always be in range","It replaces clinic reviews"],a:0,e:"Records can reveal repeat patterns and give the family and diabetes team better information for safe adjustments. They do not replace clinical review.",s:"https://www.diabetes.org.uk/living-with-diabetes/life-with-diabetes/children-and-diabetes/testing-blood-glucose",l:"Diabetes UK: understanding glucose patterns"},
+{q:"A glucose result is outside the general target range. What is the best guiding principle?",o:["Treat every child using the same internet dose","Use the child’s individual targets and action plan, and ask the diabetes team when unsure","Blame the child for the result"],a:1,e:"Targets and responses are individual. Use the plan agreed with the paediatric diabetes team; results are information for decisions, not a judgement on the child or parent.",s:"https://www.diabetes.org.uk/living-with-diabetes/life-with-diabetes/children-and-diabetes/testing-blood-glucose",l:"Diabetes UK: individual targets and action points"}
+];
+let order=[],current=0,score=0,answered=false;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function startQuiz(){order=shuffle(questions);current=0;score=0;show('quiz');render()}
+function render(){answered=false;const x=order[current];document.getElementById('fill').style.width=(current/questions.length*100)+'%';document.getElementById('counter').textContent='Question '+(current+1)+' of '+questions.length;document.getElementById('running').textContent='Score '+score;document.getElementById('question').textContent=x.q;const box=document.getElementById('options');box.innerHTML='';x.o.forEach((v,i)=>{const b=document.createElement('button');b.className='option';b.textContent=v;b.onclick=()=>answer(i,b);box.appendChild(b)});const f=document.getElementById('feedback');f.className='feedback';f.innerHTML='';document.getElementById('next').classList.remove('show')}
+function answer(choice,button){if(answered)return;answered=true;const x=order[current],correct=choice===x.a;if(correct)score++;const buttons=[...document.querySelectorAll('.option')];buttons.forEach((b,i)=>{b.disabled=true;if(i===x.a)b.classList.add('correct');else if(i===choice)b.classList.add('wrong');else b.classList.add('dim')});const f=document.getElementById('feedback');f.className='feedback show '+(correct?'good':'try');const lead=document.createElement('strong');lead.textContent=correct?'Correct. ':'Not quite. ';f.appendChild(lead);f.appendChild(document.createTextNode(x.e));const a=document.createElement('a');a.className='evidence';a.href=x.s;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Read the supporting guidance: '+x.l+' ↗';f.appendChild(document.createElement('br'));f.appendChild(a);document.getElementById('running').textContent='Score '+score;document.getElementById('next').classList.add('show')}
+function nextQuestion(){current++;if(current<questions.length){render();return}showResults()}
+function showResults(){show('results');document.getElementById('score').textContent=score+'/'+questions.length;let title,copy;if(score>=9){title='Excellent awareness';copy='You showed strong knowledge of everyday safety and emergency responses. Keep the child-specific care plan current and accessible.'}else if(score>=7){title='A strong foundation';copy='You understand many of the essentials. Review the evidence links for any scenarios that caught you out.'}else{title='Useful practice';copy='These decisions take practice. Review the explanations, revisit your child’s written care plan and ask the diabetes team to clarify anything uncertain.'}document.getElementById('result-title').textContent=title;document.getElementById('result-copy').textContent=copy}
+</script>
+</body>
+</html>
