@@ -23,6 +23,18 @@ Static quiz site served at https://salsbury.co.uk.
 | `indian-food-quiz.html` | Asian Food Choices |
 | `uk-gi-quiz.html` | Glycemic Sort (UK GI) |
 
+## SEO
+
+- Every page has a unique title, meta description, canonical URL, Open Graph/Twitter tags and
+  JSON-LD (home: WebSite, ItemList, FAQPage; games: LearningResource + BreadcrumbList).
+- `robots.txt` and `sitemap.xml` (update `lastmod` when pages change), `og-image.png` share card,
+  favicons and `site.webmanifest`. `404.html` links back to the games.
+- `deploy/apache/salsbury.co.uk-seo.inc` is included from the :443 vhost
+  (`/etc/apache2/sites-available/salsbury.co.uk-le-ssl.conf`). It 301s `www.` and `/index.html`
+  to `https://salsbury.co.uk/`, sets the 404 page and caching headers. The :80 vhost redirects
+  straight to `https://salsbury.co.uk`.
+- When `hub.js` changes, bump the `?v=` query on its script tags (it's cached for a day).
+
 ## Deploying
 
 Copy the contents of `public_html/` to the live web root.

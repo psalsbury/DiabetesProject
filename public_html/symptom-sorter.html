@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#173f35">
-<meta name="description" content="Symptom Sorter: a quick game for parents of children with Type 1 diabetes. Is it a low, a high, or time to get urgent help?">
-<title>Symptom Sorter: Low, High or Get Help? | Diabetes Learning Hub</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--forest:#173f35;--green:#2f7d61;--mint:#dff1e8;--ink:#1d2e29;--muted:#65766f;--line:#dbe6df;--red:#a53d48;--redp:#fff0f1;--amberp:#fff6df;
 --low:#2a63a8;--lowp:#e7f0fb;--high:#b26a00;--highp:#fff3dc;--urg:#b3263a;--urgp:#fde8eb}
-body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'DM Sans',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
+body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'Nunito',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
 .shell{width:min(100%,790px);margin:auto;background:rgba(255,255,255,.96);border:1px solid #fff;border-radius:26px;box-shadow:0 28px 80px rgba(23,63,53,.15);overflow:hidden}
 header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px);border-bottom:1px solid var(--line)}
 .logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--forest);color:#fff;font-size:21px}
@@ -20,13 +17,13 @@ header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px
 main{padding:clamp(24px,5vw,46px)}
 .screen{display:none}.screen.active{display:block}
 .eyebrow{margin-bottom:12px;color:var(--green);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
-h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color:var(--forest)}
+h1{font:700 clamp(35px,7vw,57px)/1.02 'Fredoka',sans-serif;letter-spacing:-1px;color:var(--forest)}
 .lead{margin:18px 0 20px;color:var(--muted);line-height:1.65}
 .legend{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
 .legend div{padding:14px;border-radius:14px;font-size:13px;line-height:1.45}.legend b{display:block;margin-bottom:3px;font-size:15px}
 .l-low{background:var(--lowp);color:#1d4677}.l-high{background:var(--highp);color:#7a4800}.l-urg{background:var(--urgp);color:#85192a}
 .safety{margin:20px 0;padding:15px 17px;color:#704b0f;background:var(--amberp);border:1px solid #efd9a7;border-radius:13px;font-size:13px;line-height:1.55}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:12px;color:#fff;background:var(--forest);font:700 15px 'DM Sans';cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:99px;color:#fff;background:var(--forest);font:700 15px 'Nunito';cursor:pointer}
 .btn:hover{filter:brightness(1.08)}.btn:focus-visible,.bin:focus-visible{outline:3px solid #e7ae43;outline-offset:3px}
 .best-line{margin-top:12px;color:var(--muted);font-size:13px}
 .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
@@ -34,19 +31,19 @@ h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color
 .progress{height:8px;margin-bottom:18px;background:#edf3ef;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--green),#69b893);transition:width .25s}
 .timer{height:4px;margin:-10px 0 18px;background:#f1f1ec;border-radius:99px;overflow:hidden}.timer i{display:block;height:100%;width:100%;background:#e7ae43;transform-origin:left}
 .card{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:170px;padding:24px 18px;text-align:center;border:1.5px solid var(--line);border-radius:20px;background:linear-gradient(160deg,#fff,#f6faf7);box-shadow:0 10px 30px rgba(23,63,53,.08)}
-.card .emo{font-size:42px;line-height:1}.card .txt{margin-top:12px;font:600 clamp(21px,4vw,27px)/1.25 'Fraunces',serif;color:var(--forest)}
+.card .emo{font-size:42px;line-height:1}.card .txt{margin-top:12px;font:600 clamp(21px,4vw,27px)/1.25 'Fredoka',sans-serif;color:var(--forest)}
 .card.pop{animation:pop .25s ease}@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}
 .card.shake{animation:shake .35s}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .bins{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-.bin{min-height:78px;padding:12px 8px;border:2px solid transparent;border-radius:15px;font:700 15px/1.2 'DM Sans';cursor:pointer;transition:transform .1s}
+.bin{min-height:78px;padding:12px 8px;border:2px solid transparent;border-radius:15px;font:700 15px/1.2 'Nunito';cursor:pointer;transition:transform .1s}
 .bin small{display:block;margin-top:4px;font-size:11px;font-weight:600;opacity:.8}
 .bin:active{transform:scale(.97)}.bin:disabled{cursor:default;opacity:.55}.bin.right{opacity:1;box-shadow:0 0 0 3px #2f7d61 inset}.bin.picked-wrong{opacity:1;box-shadow:0 0 0 3px var(--red) inset}
 .b-low{background:var(--lowp);color:#1d4677;border-color:#bcd3f0}.b-high{background:var(--highp);color:#7a4800;border-color:#f0d39b}.b-urg{background:var(--urgp);color:#85192a;border-color:#f2bcc5}
 .feedback{margin-top:14px;padding:13px 15px;border-radius:13px;font-size:13.5px;line-height:1.5;display:none}.feedback.show{display:block}
 .feedback.good{color:#075d49;background:var(--mint)}.feedback.try{color:#8c2f3a;background:var(--redp)}
 .nextrow{margin-top:12px;min-height:52px}.next{display:none}.next.show{display:inline-flex}
-.result{text-align:center}.score{display:grid;place-items:center;width:126px;height:126px;margin:0 auto 18px;color:#fff;background:var(--forest);border-radius:50%;font:700 34px 'Fraunces',serif}
-.result h2{font:700 34px 'Fraunces',serif;color:var(--forest)}.result>p{margin:12px auto 18px;max-width:560px;color:var(--muted);line-height:1.6}
+.result{text-align:center}.score{display:grid;place-items:center;width:126px;height:126px;margin:0 auto 18px;color:#fff;background:var(--forest);border-radius:50%;font:700 34px 'Fredoka',sans-serif}
+.result h2{font:700 34px 'Fredoka',sans-serif;color:var(--forest)}.result>p{margin:12px auto 18px;max-width:560px;color:var(--muted);line-height:1.6}
 .pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}.pills span{padding:7px 12px;border-radius:99px;background:#edf6f1;color:var(--forest);font-size:13px;font-weight:700}
 .review{max-width:620px;margin:0 auto 20px;text-align:left}.review h3{margin-bottom:8px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
 .review li{margin:0 0 8px 18px;font-size:14px;line-height:1.5}.review li em{font-style:normal;font-weight:700}
@@ -55,21 +52,31 @@ h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color
 @media(max-width:620px){.legend{grid-template-columns:1fr}.bin{min-height:70px;font-size:13px}.bin small{display:none}}
 @media(max-width:560px){body{padding:0;background:#fff}.shell{min-height:100dvh;border:0;border-radius:0;box-shadow:none}header{padding:15px}.brand{font-size:14px}main{padding:22px 14px}.bins{gap:7px}}
 </style>
+<title>Hypo or High? Symptom Sorter Diabetes Game | Diabetes Learning Hub</title>
+<meta name="description" content="Free diabetes game: can you spot a hypo, a high or an emergency? Sort 15 warning signs against the clock. Great diabetes training for kids, carers and schools.">
+<link rel="canonical" href="https://salsbury.co.uk/symptom-sorter.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Diabetes Learning Hub"><meta property="og:locale" content="en_GB">
+<meta property="og:url" content="https://salsbury.co.uk/symptom-sorter.html"><meta property="og:title" content="Hypo or High? Symptom Sorter Diabetes Game | Diabetes Learning Hub"><meta property="og:description" content="Free diabetes game: can you spot a hypo, a high or an emergency? Sort 15 warning signs against the clock. Great diabetes training for kids, carers and schools.">
+<meta property="og:image" content="https://salsbury.co.uk/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": ["LearningResource", "Game"], "name": "Symptom Sorter: hypo, high or get help?", "url": "https://salsbury.co.uk/symptom-sorter.html", "description": "Free diabetes game: can you spot a hypo, a high or an emergency? Sort 15 warning signs against the clock. Great diabetes training for kids, carers and schools.", "inLanguage": "en-GB", "isAccessibleForFree": true, "learningResourceType": "game", "timeRequired": "PT4M", "audience": [{"@type": "Audience", "audienceType": "Kids and teens"}, {"@type": "Audience", "audienceType": "Parents and carers"}, {"@type": "Audience", "audienceType": "School staff"}], "teaches": ["Hypoglycaemia symptoms", "Hyperglycaemia symptoms", "Diabetic ketoacidosis warning signs"], "about": {"@type": "Thing", "name": "Diabetes"}, "isPartOf": {"@id": "https://salsbury.co.uk/#website"}, "image": "https://salsbury.co.uk/og-image.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Diabetes games", "item": "https://salsbury.co.uk/"}, {"@type": "ListItem", "position": 2, "name": "Symptom Sorter: hypo, high or get help?", "item": "https://salsbury.co.uk/symptom-sorter.html"}]}]}</script>
 </head>
 <body>
 <div class="shell">
-<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="index.html">All games</a></header>
+<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="/">All games</a></header>
 <main>
 <section id="welcome" class="screen active">
-<div class="eyebrow">Quick-fire game for parents and carers · Type 1 diabetes</div>
-<h1>Symptom Sorter.</h1>
-<p class="lead">Spotting the signs early is one of the most useful skills a parent, grandparent, babysitter or teacher can have. Sort 15 signs into the right bin. Be quick for bonus points, and keep a streak going.</p>
+<div class="eyebrow">Diabetes game · kids, teens, carers &amp; schools</div>
+<h1>Symptom Sorter 🚦</h1>
+<p class="lead">Can you spot a hypo? Sort 15 signs into the right bin. Be quick for bonus points!</p>
 <div class="legend">
-<div class="l-low"><b>🔵 Low</b>Hypo: glucose under 4 mmol/L. Treat with fast-acting sugar.</div>
-<div class="l-high"><b>🟠 High</b>Above target. Check, correct as planned, and check ketones.</div>
-<div class="l-urg"><b>🔴 Get help now</b>Emergency signs: call 999, or get urgent advice now as the plan directs.</div>
+<div class="l-low"><b>🔵 Low</b>Under 4. Treat with fast sugar.</div>
+<div class="l-high"><b>🟠 High</b>Above target. Check and correct.</div>
+<div class="l-urg"><b>🔴 Get help now</b>Emergency. Call 999 or your team.</div>
 </div>
-<div class="safety"><strong>Important:</strong> Symptoms differ from child to child, and some (like tiredness or headaches) can happen with both highs and lows. <strong>If in doubt, check the glucose.</strong> Follow your child’s care plan and their team’s ketone and hypo thresholds.</div>
+<div class="safety">⚠️ Signs vary from person to person. <strong>If in doubt, check the glucose</strong> and follow your care plan.</div>
 <button class="btn" onclick="start()">Start sorting →</button>
 <p class="best-line" id="best-line"></p>
 </section>
@@ -96,11 +103,11 @@ h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color
 <div class="review" id="review"></div>
 <button class="btn" onclick="start()">Play again with new signs</button>
 <div id="next-games"></div>
-<p class="reminder">Share this game with grandparents, childminders and teachers. Everyone who looks after your child should know these signs. Read more: <a href="https://www.diabetes.org.uk/about-diabetes/looking-after-diabetes/complications/hypos" target="_blank" rel="noopener noreferrer">Diabetes UK on hypos ↗</a> · <a href="https://www.nhs.uk/conditions/diabetic-ketoacidosis/" target="_blank" rel="noopener noreferrer">NHS on DKA ↗</a></p>
+<p class="reminder">Share this with grandparents, babysitters and teachers. More: <a href="https://www.diabetes.org.uk/about-diabetes/looking-after-diabetes/complications/hypos" target="_blank" rel="noopener noreferrer">hypos ↗</a> · <a href="https://www.nhs.uk/conditions/diabetic-ketoacidosis/" target="_blank" rel="noopener noreferrer">DKA ↗</a></p>
 </section>
 </main>
 </div>
-<script src="hub.js"></script>
+<script src="hub.js?v=2"></script>
 <script>
 const BANK=[
 {e:'🫨',t:'Shaky or trembling hands',b:'low',x:'Shakiness is one of the classic early hypo signs. Check the glucose and treat if under 4.'},
@@ -162,5 +169,7 @@ function finish(){show('results');$('score').textContent=correct+'/'+N;const pre
 document.addEventListener('keydown',e=>{if(!$('game').classList.contains('active'))return;if(!answered){if(e.key==='1')pick('low');else if(e.key==='2')pick('high');else if(e.key==='3')pick('urgent')}else if(e.key==='Enter'&&document.activeElement!==$('next'))advance()});
 initBest();
 </script>
+<nav class="more-games" aria-label="More diabetes games"><a href="/">🎮 All diabetes games</a><a href="symptom-sorter.html">Symptom Sorter</a><a href="day-with-sam.html">A Day with Sam</a><a href="uk-gi-quiz.html">High or Low GI?</a><a href="type1-food-groups-quiz.html">Food Groups</a><a href="hybrid-closed-loop-quiz.html">Closed Loop Pumps</a><a href="type1-parent-quiz.html">Parent Skills</a><a href="indian-food-quiz.html">Asian Food Choices</a></nav>
+<style>.more-games{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;width:min(100% - 28px,820px);margin:22px auto 30px;font:700 13px Nunito,sans-serif}.more-games a{color:#2f7d61;text-decoration:none}.more-games a:hover{text-decoration:underline}.more-games a:first-child{color:#173f35}</style>
 </body>
 </html>

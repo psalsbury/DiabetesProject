@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://salsbury.co.uk/sitemap.xml

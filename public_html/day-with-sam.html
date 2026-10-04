@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#173f35">
-<meta name="description" content="A Day with Sam: an interactive game for parents of children with Type 1 diabetes. Make the care decisions through a school day and watch the glucose graph respond.">
-<title>A Day with Sam: Type 1 Diabetes Parent Game | Diabetes Learning Hub</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--forest:#173f35;--green:#2f7d61;--mint:#dff1e8;--cream:#fbf8f0;--ink:#1d2e29;--muted:#65766f;--line:#dbe6df;--red:#a53d48;--redp:#fff0f1;--amber:#8a5a12;--amberp:#fff6df;--white:#fff}
-body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'DM Sans',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
+body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'Nunito',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
 .shell{width:min(100%,820px);margin:auto;background:rgba(255,255,255,.96);border:1px solid #fff;border-radius:26px;box-shadow:0 28px 80px rgba(23,63,53,.15);overflow:hidden}
 header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px);border-bottom:1px solid var(--line)}
 .logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--forest);color:#fff;font-size:21px}
@@ -19,12 +16,12 @@ header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px
 main{padding:clamp(24px,5vw,46px)}
 .screen{display:none}.screen.active{display:block}
 .eyebrow{margin-bottom:12px;color:var(--green);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
-h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color:var(--forest)}
+h1{font:700 clamp(35px,7vw,57px)/1.02 'Fredoka',sans-serif;letter-spacing:-1px;color:var(--forest)}
 .lead{margin:18px 0 20px;color:var(--muted);line-height:1.65}
 .how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 20px}
 .how div{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:13px;line-height:1.45;color:var(--muted)}.how b{display:block;margin-bottom:4px;color:var(--forest);font-size:14px}
 .safety{margin:20px 0;padding:15px 17px;color:#704b0f;background:var(--amberp);border:1px solid #efd9a7;border-radius:13px;font-size:13px;line-height:1.55}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:12px;color:#fff;background:var(--forest);font:700 15px 'DM Sans';cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:99px;color:#fff;background:var(--forest);font:700 15px 'Nunito';cursor:pointer}
 .btn:hover{filter:brightness(1.08)}.btn:focus-visible,.option:focus-visible{outline:3px solid #e7ae43;outline-offset:3px}
 .btn.ghost{color:var(--forest);background:#fff;border:1.5px solid var(--line)}
 .progress{height:8px;margin-bottom:16px;background:#edf3ef;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--green),#69b893);transition:width .25s}
@@ -32,15 +29,15 @@ h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color
 .cgm{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:stretch;margin-bottom:20px;padding:14px;border-radius:18px;background:#10251f;color:#e8f3ee}
 .reading{display:flex;flex-direction:column;justify-content:center;padding:6px 4px 6px 8px}
 .reading .lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8fb5a6}
-.reading .val{font:700 46px/1 'Fraunces',serif;transition:color .3s}.reading .unit{font-size:12px;color:#8fb5a6}
+.reading .val{font:700 46px/1 'Fredoka',sans-serif;transition:color .3s}.reading .unit{font-size:12px;color:#8fb5a6}
 .reading .val.low{color:#ff8a8a}.reading .val.high{color:#ffc56b}.reading .val.ok{color:#8fe3bd}
 .reading .state{margin-top:8px;font-size:12px;font-weight:700}
 svg.graph{width:100%;height:150px;display:block}
 .scene{display:flex;gap:12px;align-items:center;margin-bottom:6px}
 .clock{padding:5px 10px;border-radius:99px;background:var(--mint);color:var(--forest);font-size:12px;font-weight:700}
 .scene .where{color:var(--muted);font-size:13px;font-weight:600}
-.question{margin:6px 0 18px;font:600 clamp(21px,3.6vw,28px)/1.25 'Fraunces',serif;color:var(--forest)}
-.options{display:grid;gap:10px}.option{width:100%;min-height:54px;padding:13px 15px;text-align:left;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:13px;font:600 14px/1.4 'DM Sans';cursor:pointer}
+.question{margin:6px 0 18px;font:600 clamp(21px,3.6vw,28px)/1.25 'Fredoka',sans-serif;color:var(--forest)}
+.options{display:grid;gap:10px}.option{width:100%;min-height:54px;padding:13px 15px;text-align:left;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:13px;font:600 14px/1.4 'Nunito';cursor:pointer}
 .option:not(:disabled):hover{border-color:#89bca6;background:#f7fbf9}.option:disabled{cursor:default}
 .option.best{color:#075d49;background:var(--mint);border-color:var(--green)}.option.ok{color:#704b0f;background:var(--amberp);border-color:#e0bf72}.option.poor{color:#8c2f3a;background:var(--redp);border-color:var(--red)}.option.dim{opacity:.5}
 .feedback{margin-top:14px;padding:14px 16px;border:1px solid transparent;border-radius:13px;display:none;font-size:13.5px;line-height:1.55}.feedback.show{display:block}
@@ -49,8 +46,8 @@ svg.graph{width:100%;height:150px;display:block}
 .nextrow{min-height:58px;margin-top:12px}.next{display:none}.next.show{display:inline-flex}
 .result{text-align:center}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 auto 22px;max-width:620px}
-.stat{padding:16px 10px;border-radius:16px;background:var(--forest);color:#fff}.stat b{display:block;font:700 32px/1.1 'Fraunces',serif}.stat span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#bfe0d2}
-.result h2{font:700 34px 'Fraunces',serif;color:var(--forest)}.result>p{margin:12px auto 20px;max-width:580px;color:var(--muted);line-height:1.6}
+.stat{padding:16px 10px;border-radius:16px;background:var(--forest);color:#fff}.stat b{display:block;font:700 32px/1.1 'Fredoka',sans-serif}.stat span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#bfe0d2}
+.result h2{font:700 34px 'Fredoka',sans-serif;color:var(--forest)}.result>p{margin:12px auto 20px;max-width:580px;color:var(--muted);line-height:1.6}
 .review{max-width:620px;margin:0 auto 22px;text-align:left}.review h3{margin-bottom:8px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
 .review li{margin:0 0 8px 18px;color:var(--ink);font-size:14px;line-height:1.5}.review li span{color:var(--muted)}
 .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
@@ -58,23 +55,32 @@ svg.graph{width:100%;height:150px;display:block}
 @media(max-width:620px){.how{grid-template-columns:1fr}.cgm{grid-template-columns:1fr;gap:6px}.reading{flex-direction:row;align-items:baseline;gap:8px;flex-wrap:wrap}.reading .val{font-size:38px}.reading .state{margin:0 0 0 auto}svg.graph{height:120px}.stats{grid-template-columns:1fr 1fr 1fr}.stat b{font-size:24px}}
 @media(max-width:560px){body{padding:0;background:#fff}.shell{min-height:100dvh;border:0;border-radius:0;box-shadow:none}header{padding:15px}.brand{font-size:14px}main{padding:22px 14px}.option{font-size:13px}}
 </style>
+<title>A Day with Sam: Type 1 Diabetes Game for Teens &amp; Parents</title>
+<meta name="description" content="Free Type 1 diabetes game. Make the care decisions through a school day: breakfast insulin, a hypo, PE, a party and a sick day. Watch the glucose graph react.">
+<link rel="canonical" href="https://salsbury.co.uk/day-with-sam.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Diabetes Learning Hub"><meta property="og:locale" content="en_GB">
+<meta property="og:url" content="https://salsbury.co.uk/day-with-sam.html"><meta property="og:title" content="A Day with Sam: Type 1 Diabetes Game for Teens &amp; Parents"><meta property="og:description" content="Free Type 1 diabetes game. Make the care decisions through a school day: breakfast insulin, a hypo, PE, a party and a sick day. Watch the glucose graph react.">
+<meta property="og:image" content="https://salsbury.co.uk/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": ["LearningResource", "Game"], "name": "A Day with Sam: Type 1 diabetes game", "url": "https://salsbury.co.uk/day-with-sam.html", "description": "Free Type 1 diabetes game. Make the care decisions through a school day: breakfast insulin, a hypo, PE, a party and a sick day. Watch the glucose graph react.", "inLanguage": "en-GB", "isAccessibleForFree": true, "learningResourceType": "game", "timeRequired": "PT6M", "audience": [{"@type": "Audience", "audienceType": "Teens"}, {"@type": "Audience", "audienceType": "Parents and carers"}], "teaches": ["Mealtime insulin", "Treating hypos", "Exercise and diabetes", "Sick-day rules", "Ketones"], "about": {"@type": "Thing", "name": "Diabetes"}, "isPartOf": {"@id": "https://salsbury.co.uk/#website"}, "image": "https://salsbury.co.uk/og-image.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Diabetes games", "item": "https://salsbury.co.uk/"}, {"@type": "ListItem", "position": 2, "name": "A Day with Sam: Type 1 diabetes game", "item": "https://salsbury.co.uk/day-with-sam.html"}]}]}</script>
 </head>
 <body>
 <div class="shell">
-<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="index.html">All games</a></header>
+<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="/">All games</a></header>
 <main>
 <section id="welcome" class="screen active">
-<div class="eyebrow">Game for parents and carers · Type 1 diabetes</div>
-<h1>A Day with Sam.</h1>
-<p class="lead">Sam is 9 and has Type 1 diabetes. Follow Sam from breakfast to the next morning: school, a hypo, PE, a birthday party, bedtime and a sick day. You make the calls, and Sam’s CGM graph shows what happens next.</p>
+<div class="eyebrow">Type 1 diabetes game · teens, parents &amp; carers</div>
+<h1>A Day with Sam 📈</h1>
+<p class="lead">Sam is 9 and has Type 1 diabetes. You make the calls through one busy day. Watch the glucose graph react!</p>
 <div class="how">
-<div><b>📈 Watch the graph</b>Every decision moves Sam’s glucose. The green band is the usual 4–10 mmol/L daytime target.</div>
-<div><b>🎯 Choose well</b>Best choices score 2 points and okay choices score 1. Each answer explains why.</div>
-<div><b>⏱️ Time in range</b>At the end you’ll see Sam’s time in range and the lessons worth remembering.</div>
+<div><b>📈 Watch the graph</b>Green band = 4–10 mmol/L.</div>
+<div><b>🎯 Choose well</b>Best answer = 2 points.</div>
+<div><b>⏱️ Time in range</b>Your score at the end.</div>
 </div>
-<div class="safety"><strong>Important:</strong> Sam is fictional and the glucose numbers are illustrations. Every child is different. Always follow your child’s own care plan, insulin doses, hypo treatment amounts and targets from their paediatric diabetes team.</div>
+<div class="safety">⚠️ Sam’s numbers are made up. Always follow your own care plan.</div>
 <button class="btn" onclick="start()">Start Sam’s day →</button>
-<p class="reminder">Education only. This game cannot replace training or advice from your child’s diabetes team.</p>
 </section>
 
 <section id="game" class="screen" aria-live="polite">
@@ -103,11 +109,11 @@ svg.graph{width:100%;height:150px;display:block}
 <div class="review" id="review"></div>
 <div class="actions"><button class="btn" onclick="start()">Play Sam’s day again</button></div>
 <div id="next-games"></div>
-<p class="reminder">Real days are messier than this game: growth, hormones, stress, excitement and illness all move glucose. Results are information for decisions, not a judgement on you or your child.</p>
+<p class="reminder">💡 Real days are messier: growth, stress and illness all move glucose. Readings are information, not a judgement.</p>
 </section>
 </main>
 </div>
-<script src="hub.js"></script>
+<script src="hub.js?v=2"></script>
 <script>
 const DUK='https://www.diabetes.org.uk/';
 const events=[
@@ -168,7 +174,7 @@ function y(v){v=Math.max(2,Math.min(22,v));return 140-(v-2)/20*130}
 function draw(){const g=$('graph'),W=400,n=events.length*2,step=(W-20)/(n-1);let h='';
  h+='<rect x="0" y="'+y(10)+'" width="'+W+'" height="'+(y(3.9)-y(10))+'" fill="#2f7d61" opacity=".28"/>';
  h+='<line x1="0" x2="'+W+'" y1="'+y(3.9)+'" y2="'+y(3.9)+'" stroke="#ff8a8a" stroke-dasharray="4 4" stroke-width="1"/>';
- [4,10].forEach(v=>h+='<text x="4" y="'+(y(v)-3)+'" fill="#8fb5a6" font-size="10" font-family="DM Sans,sans-serif">'+v+'</text>');
+ [4,10].forEach(v=>h+='<text x="4" y="'+(y(v)-3)+'" fill="#8fb5a6" font-size="10" font-family="Nunito,sans-serif">'+v+'</text>');
  if(readings.length>1){h+='<polyline fill="none" stroke="#e8f3ee" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" points="'+readings.map((v,k)=>(10+k*step).toFixed(1)+','+y(v).toFixed(1)).join(' ')+'"/>'}
  readings.forEach((v,k)=>{h+='<circle cx="'+(10+k*step).toFixed(1)+'" cy="'+y(v).toFixed(1)+'" r="'+(k===readings.length-1?5:3.2)+'" fill="'+(v<4?'#ff8a8a':v>10?'#ffc56b':'#8fe3bd')+'"/>'});
  g.innerHTML=h}
@@ -197,5 +203,7 @@ function finish(){show('results');const max=events.length*2,inR=readings.filter(
  const rv=$('review');if(missed.length){rv.innerHTML='<h3>Lessons to remember</h3><ul>'+missed.map(e=>'<li>'+Hub.esc(e.learn)+' <span>('+e.time+')</span></li>').join('')+'</ul>'}else rv.innerHTML='<h3>Perfect run</h3><ul><li>You picked the best option at every moment. Try the Symptom Sorter next to test how quickly you spot warning signs.</li></ul>';
  Hub.record('day-with-sam',pts,max);Hub.renderNext($('next-games'),'day-with-sam',{shareText:'I helped Sam through a day with Type 1 diabetes: '+tir+'% time in range. Can you beat it?'})}
 </script>
+<nav class="more-games" aria-label="More diabetes games"><a href="/">🎮 All diabetes games</a><a href="symptom-sorter.html">Symptom Sorter</a><a href="day-with-sam.html">A Day with Sam</a><a href="uk-gi-quiz.html">High or Low GI?</a><a href="type1-food-groups-quiz.html">Food Groups</a><a href="hybrid-closed-loop-quiz.html">Closed Loop Pumps</a><a href="type1-parent-quiz.html">Parent Skills</a><a href="indian-food-quiz.html">Asian Food Choices</a></nav>
+<style>.more-games{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;width:min(100% - 28px,820px);margin:22px auto 30px;font:700 13px Nunito,sans-serif}.more-games a{color:#2f7d61;text-decoration:none}.more-games a:hover{text-decoration:underline}.more-games a:first-child{color:#173f35}</style>
 </body>
 </html>

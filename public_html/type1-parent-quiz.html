@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#173f35">
-<title>Type 1 Diabetes Parent Skills Quiz | Diabetes Learning Hub</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--forest:#173f35;--green:#2f7d61;--mint:#dff1e8;--cream:#fbf8f0;--ink:#1d2e29;--muted:#65766f;--line:#dbe6df;--red:#a53d48;--redp:#fff0f1;--amber:#8a5a12;--amberp:#fff6df;--white:#fff}
-body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'DM Sans',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
+body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'Nunito',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
 .shell{width:min(100%,790px);margin:auto;background:rgba(255,255,255,.96);border:1px solid #fff;border-radius:26px;box-shadow:0 28px 80px rgba(23,63,53,.15);overflow:hidden}
 header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px);border-bottom:1px solid var(--line)}
 .logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--forest);color:#fff;font-size:21px}
@@ -18,39 +16,48 @@ header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px
 main{padding:clamp(24px,5vw,46px)}
 .screen{display:none}.screen.active{display:block}
 .eyebrow{margin-bottom:12px;color:var(--green);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
-h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color:var(--forest)}
+h1{font:700 clamp(35px,7vw,57px)/1.02 'Fredoka',sans-serif;letter-spacing:-1px;color:var(--forest)}
 .lead{margin:18px 0 24px;color:var(--muted);line-height:1.65}
 .safety{margin:20px 0;padding:15px 17px;color:#704b0f;background:var(--amberp);border:1px solid #efd9a7;border-radius:13px;font-size:13px;line-height:1.55}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:12px;color:#fff;background:var(--forest);font:700 15px 'DM Sans';cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:99px;color:#fff;background:var(--forest);font:700 15px 'Nunito';cursor:pointer}
 .btn:hover{filter:brightness(1.08)}.btn:focus-visible,.option:focus-visible{outline:3px solid #e7ae43;outline-offset:3px}
 .progress{height:8px;margin-bottom:16px;background:#edf3ef;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--green),#69b893);transition:width .25s}
 .meta{display:flex;justify-content:space-between;margin-bottom:22px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-.question{min-height:92px;margin-bottom:20px;font:600 clamp(23px,4vw,31px)/1.22 'Fraunces',serif;color:var(--forest)}
-.options{display:grid;gap:10px}.option{width:100%;min-height:54px;padding:13px 15px;text-align:left;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:13px;font:600 14px/1.4 'DM Sans';cursor:pointer}
+.question{min-height:92px;margin-bottom:20px;font:600 clamp(23px,4vw,31px)/1.22 'Fredoka',sans-serif;color:var(--forest)}
+.options{display:grid;gap:10px}.option{width:100%;min-height:54px;padding:13px 15px;text-align:left;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:13px;font:600 14px/1.4 'Nunito';cursor:pointer}
 .option:not(:disabled):hover{border-color:#89bca6;background:#f7fbf9}.option:disabled{cursor:default}.option.correct{color:#075d49;background:var(--mint);border-color:var(--green)}.option.wrong{color:#8c2f3a;background:var(--redp);border-color:var(--red)}.option.dim{opacity:.52}
 .feedback{min-height:132px;margin-top:14px;padding:14px 16px;border:1px solid transparent;border-radius:13px;visibility:hidden;font-size:13px;line-height:1.5}.feedback.show{visibility:visible}.feedback.good{color:#075d49;background:var(--mint);border-color:#b2ddcc}.feedback.try{color:#704b0f;background:var(--amberp);border-color:#efd9a7}
 .evidence{display:inline-block;margin-top:8px;color:inherit;font-weight:700}.nextrow{min-height:58px;margin-top:10px}.next{visibility:hidden}.next.show{visibility:visible}
-.score{display:grid;place-items:center;width:118px;height:118px;margin:0 auto 20px;color:#fff;background:var(--forest);border-radius:50%;font:700 35px 'Fraunces',serif}.result{text-align:center}.result h2{font:700 34px 'Fraunces',serif;color:var(--forest)}.result p{margin:12px auto 24px;max-width:560px;color:var(--muted);line-height:1.6}
+.score{display:grid;place-items:center;width:118px;height:118px;margin:0 auto 20px;color:#fff;background:var(--forest);border-radius:50%;font:700 35px 'Fredoka',sans-serif}.result{text-align:center}.result h2{font:700 34px 'Fredoka',sans-serif;color:var(--forest)}.result p{margin:12px auto 24px;max-width:560px;color:var(--muted);line-height:1.6}
 .reminder{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.55}
 @media(max-width:560px){body{padding:0;background:#fff}.shell{min-height:100dvh;border:0;border-radius:0;box-shadow:none}header{padding:15px}.brand{font-size:14px}main{padding:24px 14px}.question{min-height:108px}.feedback{min-height:154px}.option{font-size:13px}}
 </style>
+<title>Type 1 Diabetes Training Quiz for Parents &amp; Carers</title>
+<meta name="description" content="Free Type 1 diabetes training quiz for parents, carers and school staff: hypos, ketones, sick days, exercise and when to get urgent help.">
+<link rel="canonical" href="https://salsbury.co.uk/type1-parent-quiz.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Diabetes Learning Hub"><meta property="og:locale" content="en_GB">
+<meta property="og:url" content="https://salsbury.co.uk/type1-parent-quiz.html"><meta property="og:title" content="Type 1 Diabetes Training Quiz for Parents &amp; Carers"><meta property="og:description" content="Free Type 1 diabetes training quiz for parents, carers and school staff: hypos, ketones, sick days, exercise and when to get urgent help.">
+<meta property="og:image" content="https://salsbury.co.uk/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": ["LearningResource", "Quiz"], "name": "Type 1 diabetes parent skills quiz", "url": "https://salsbury.co.uk/type1-parent-quiz.html", "description": "Free Type 1 diabetes training quiz for parents, carers and school staff: hypos, ketones, sick days, exercise and when to get urgent help.", "inLanguage": "en-GB", "isAccessibleForFree": true, "learningResourceType": "quiz", "timeRequired": "PT5M", "audience": [{"@type": "Audience", "audienceType": "Parents and carers"}, {"@type": "Audience", "audienceType": "School staff"}], "teaches": ["Treating hypos", "Ketones and DKA", "Sick-day rules"], "about": {"@type": "Thing", "name": "Diabetes"}, "isPartOf": {"@id": "https://salsbury.co.uk/#website"}, "image": "https://salsbury.co.uk/og-image.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Diabetes games", "item": "https://salsbury.co.uk/"}, {"@type": "ListItem", "position": 2, "name": "Type 1 diabetes parent skills quiz", "item": "https://salsbury.co.uk/type1-parent-quiz.html"}]}]}</script>
 </head>
 <body>
 <div class="shell">
-<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="index.html">Home</a></header>
+<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="/">All games</a></header>
 <main>
 <section id="welcome" class="screen active">
-<div class="eyebrow">For parents and carers · Type 1 diabetes</div>
-<h1>Everyday decisions, safer responses.</h1>
-<p class="lead">Ten practical scenarios to reinforce the essentials of supporting a child with Type 1 diabetes—from hypos and ketones to exercise and knowing when to get help.</p>
-<div class="safety"><strong>Important:</strong> Use your child’s written care plan, prescribed insulin doses and hypo treatment amounts. If they may have diabetic ketoacidosis, are unconscious, having a seizure or not recovering, seek urgent medical help.</div>
+<div class="eyebrow">Diabetes training quiz · parents &amp; carers</div>
+<h1>What would you do?</h1>
+<p class="lead">10 real-life moments: hypos, ketones, sick days and exercise.</p>
+<div class="safety">⚠️ Always use your own care plan. If someone may have DKA, is unconscious, fitting or not getting better, <strong>get urgent help</strong>.</div>
 <button class="btn" onclick="startQuiz()">Start parent skills quiz →</button>
-<p class="reminder">Education only. This quiz cannot replace training or advice from your child’s paediatric diabetes team.</p>
 </section>
 <section id="quiz" class="screen" aria-live="polite">
 <div class="progress"><div class="fill" id="fill"></div></div>
 <div class="meta"><span id="counter"></span><span id="running"></span></div>
-<h1 class="question" id="question"></h1>
+<h2 class="question" id="question"></h2>
 <div class="options" id="options"></div>
 <div class="feedback" id="feedback"></div>
 <div class="nextrow"><button class="btn next" id="next" onclick="nextQuestion()">Next question →</button></div>
@@ -61,7 +68,7 @@ h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color
 <p id="result-copy"></p>
 <button class="btn" onclick="startQuiz()">Try again</button>
 <div id="next-games"></div>
-<p class="reminder">Keep your child’s diabetes-team and out-of-hours numbers, hypo treatment, glucagon and ketone-testing supplies easy to find. Share the child’s current care plan with everyone responsible for them.</p>
+<p class="reminder">💡 For learning only. Always follow your diabetes team’s advice.</p>
 </section>
 </main>
 </div>
@@ -87,9 +94,11 @@ function answer(choice,button){if(answered)return;answered=true;const x=order[cu
 function nextQuestion(){current++;if(current<questions.length){render();return}showResults()}
 function showResults(){show('results');document.getElementById('score').textContent=score+'/'+questions.length;let title,copy;if(score>=9){title='Excellent awareness';copy='You showed strong knowledge of everyday safety and emergency responses. Keep the child-specific care plan current and accessible.'}else if(score>=7){title='A strong foundation';copy='You understand many of the essentials. Review the evidence links for any scenarios that caught you out.'}else{title='Useful practice';copy='These decisions take practice. Review the explanations, revisit your child’s written care plan and ask the diabetes team to clarify anything uncertain.'}document.getElementById('result-title').textContent=title;document.getElementById('result-copy').textContent=copy}
 </script>
-<script src="hub.js"></script>
+<script src="hub.js?v=2"></script>
 <script>
 (function(){const base=showResults;showResults=function(){base();Hub.record('type1-parent',score,questions.length);Hub.renderNext(document.getElementById('next-games'),'type1-parent',{shareText:'I scored '+score+'/'+questions.length+' on the Type 1 Parent Skills quiz at the Diabetes Learning Hub. Give it a try:'})}})();
 </script>
+<nav class="more-games" aria-label="More diabetes games"><a href="/">🎮 All diabetes games</a><a href="symptom-sorter.html">Symptom Sorter</a><a href="day-with-sam.html">A Day with Sam</a><a href="uk-gi-quiz.html">High or Low GI?</a><a href="type1-food-groups-quiz.html">Food Groups</a><a href="hybrid-closed-loop-quiz.html">Closed Loop Pumps</a><a href="type1-parent-quiz.html">Parent Skills</a><a href="indian-food-quiz.html">Asian Food Choices</a></nav>
+<style>.more-games{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;width:min(100% - 28px,820px);margin:22px auto 30px;font:700 13px Nunito,sans-serif}.more-games a{color:#2f7d61;text-decoration:none}.more-games a:hover{text-decoration:underline}.more-games a:first-child{color:#173f35}</style>
 </body>
 </html>
