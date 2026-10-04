@@ -60,6 +60,7 @@ h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color
 <h2 id="result-title">Well done</h2>
 <p id="result-copy"></p>
 <button class="btn" onclick="startQuiz()">Try again</button>
+<div id="next-games"></div>
 <p class="reminder">Keep your child’s diabetes-team and out-of-hours numbers, hypo treatment, glucagon and ketone-testing supplies easy to find. Share the child’s current care plan with everyone responsible for them.</p>
 </section>
 </main>
@@ -85,6 +86,10 @@ function render(){answered=false;const x=order[current];document.getElementById(
 function answer(choice,button){if(answered)return;answered=true;const x=order[current],correct=choice===x.a;if(correct)score++;const buttons=[...document.querySelectorAll('.option')];buttons.forEach((b,i)=>{b.disabled=true;if(i===x.a)b.classList.add('correct');else if(i===choice)b.classList.add('wrong');else b.classList.add('dim')});const f=document.getElementById('feedback');f.className='feedback show '+(correct?'good':'try');const lead=document.createElement('strong');lead.textContent=correct?'Correct. ':'Not quite. ';f.appendChild(lead);f.appendChild(document.createTextNode(x.e));const a=document.createElement('a');a.className='evidence';a.href=x.s;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Read the supporting guidance: '+x.l+' ↗';f.appendChild(document.createElement('br'));f.appendChild(a);document.getElementById('running').textContent='Score '+score;document.getElementById('next').classList.add('show')}
 function nextQuestion(){current++;if(current<questions.length){render();return}showResults()}
 function showResults(){show('results');document.getElementById('score').textContent=score+'/'+questions.length;let title,copy;if(score>=9){title='Excellent awareness';copy='You showed strong knowledge of everyday safety and emergency responses. Keep the child-specific care plan current and accessible.'}else if(score>=7){title='A strong foundation';copy='You understand many of the essentials. Review the evidence links for any scenarios that caught you out.'}else{title='Useful practice';copy='These decisions take practice. Review the explanations, revisit your child’s written care plan and ask the diabetes team to clarify anything uncertain.'}document.getElementById('result-title').textContent=title;document.getElementById('result-copy').textContent=copy}
+</script>
+<script src="hub.js"></script>
+<script>
+(function(){const base=showResults;showResults=function(){base();Hub.record('type1-parent',score,questions.length);Hub.renderNext(document.getElementById('next-games'),'type1-parent',{shareText:'I scored '+score+'/'+questions.length+' on the Type 1 Parent Skills quiz at the Diabetes Learning Hub. Give it a try:'})}})();
 </script>
 </body>
 </html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173f35">
+<meta name="description" content="A Day with Sam: an interactive game for parents of children with Type 1 diabetes. Make the care decisions through a school day and watch the glucose graph respond.">
+<title>A Day with Sam: Type 1 Diabetes Parent Game | Diabetes Learning Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--forest:#173f35;--green:#2f7d61;--mint:#dff1e8;--cream:#fbf8f0;--ink:#1d2e29;--muted:#65766f;--line:#dbe6df;--red:#a53d48;--redp:#fff0f1;--amber:#8a5a12;--amberp:#fff6df;--white:#fff}
+body{min-height:100vh;min-height:100dvh;padding:clamp(14px,4vw,42px);font-family:'DM Sans',sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 8%,#d9f0e5,transparent 30rem),radial-gradient(circle at 90% 90%,#f4dfb8,transparent 28rem),#f4f7f2}
+.shell{width:min(100%,820px);margin:auto;background:rgba(255,255,255,.96);border:1px solid #fff;border-radius:26px;box-shadow:0 28px 80px rgba(23,63,53,.15);overflow:hidden}
+header{display:flex;align-items:center;gap:11px;padding:20px clamp(18px,4vw,34px);border-bottom:1px solid var(--line)}
+.logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--forest);color:#fff;font-size:21px}
+.brand{font-weight:700;color:var(--forest)}.brand span{color:var(--green)}
+.home{margin-left:auto;color:var(--green);font-size:13px;font-weight:700;text-decoration:none}.home:hover{text-decoration:underline}
+main{padding:clamp(24px,5vw,46px)}
+.screen{display:none}.screen.active{display:block}
+.eyebrow{margin-bottom:12px;color:var(--green);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+h1{font:700 clamp(35px,7vw,57px)/1.02 'Fraunces',serif;letter-spacing:-1px;color:var(--forest)}
+.lead{margin:18px 0 20px;color:var(--muted);line-height:1.65}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 20px}
+.how div{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:13px;line-height:1.45;color:var(--muted)}.how b{display:block;margin-bottom:4px;color:var(--forest);font-size:14px}
+.safety{margin:20px 0;padding:15px 17px;color:#704b0f;background:var(--amberp);border:1px solid #efd9a7;border-radius:13px;font-size:13px;line-height:1.55}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 22px;border:0;border-radius:12px;color:#fff;background:var(--forest);font:700 15px 'DM Sans';cursor:pointer}
+.btn:hover{filter:brightness(1.08)}.btn:focus-visible,.option:focus-visible{outline:3px solid #e7ae43;outline-offset:3px}
+.btn.ghost{color:var(--forest);background:#fff;border:1.5px solid var(--line)}
+.progress{height:8px;margin-bottom:16px;background:#edf3ef;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--green),#69b893);transition:width .25s}
+.meta{display:flex;justify-content:space-between;margin-bottom:16px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.cgm{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:stretch;margin-bottom:20px;padding:14px;border-radius:18px;background:#10251f;color:#e8f3ee}
+.reading{display:flex;flex-direction:column;justify-content:center;padding:6px 4px 6px 8px}
+.reading .lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8fb5a6}
+.reading .val{font:700 46px/1 'Fraunces',serif;transition:color .3s}.reading .unit{font-size:12px;color:#8fb5a6}
+.reading .val.low{color:#ff8a8a}.reading .val.high{color:#ffc56b}.reading .val.ok{color:#8fe3bd}
+.reading .state{margin-top:8px;font-size:12px;font-weight:700}
+svg.graph{width:100%;height:150px;display:block}
+.scene{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.clock{padding:5px 10px;border-radius:99px;background:var(--mint);color:var(--forest);font-size:12px;font-weight:700}
+.scene .where{color:var(--muted);font-size:13px;font-weight:600}
+.question{margin:6px 0 18px;font:600 clamp(21px,3.6vw,28px)/1.25 'Fraunces',serif;color:var(--forest)}
+.options{display:grid;gap:10px}.option{width:100%;min-height:54px;padding:13px 15px;text-align:left;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:13px;font:600 14px/1.4 'DM Sans';cursor:pointer}
+.option:not(:disabled):hover{border-color:#89bca6;background:#f7fbf9}.option:disabled{cursor:default}
+.option.best{color:#075d49;background:var(--mint);border-color:var(--green)}.option.ok{color:#704b0f;background:var(--amberp);border-color:#e0bf72}.option.poor{color:#8c2f3a;background:var(--redp);border-color:var(--red)}.option.dim{opacity:.5}
+.feedback{margin-top:14px;padding:14px 16px;border:1px solid transparent;border-radius:13px;display:none;font-size:13.5px;line-height:1.55}.feedback.show{display:block}
+.feedback.best{color:#075d49;background:var(--mint);border-color:#b2ddcc}.feedback.ok{color:#704b0f;background:var(--amberp);border-color:#efd9a7}.feedback.poor{color:#8c2f3a;background:var(--redp);border-color:#efbdc3}
+.evidence{display:inline-block;margin-top:8px;color:inherit;font-weight:700}
+.nextrow{min-height:58px;margin-top:12px}.next{display:none}.next.show{display:inline-flex}
+.result{text-align:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 auto 22px;max-width:620px}
+.stat{padding:16px 10px;border-radius:16px;background:var(--forest);color:#fff}.stat b{display:block;font:700 32px/1.1 'Fraunces',serif}.stat span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#bfe0d2}
+.result h2{font:700 34px 'Fraunces',serif;color:var(--forest)}.result>p{margin:12px auto 20px;max-width:580px;color:var(--muted);line-height:1.6}
+.review{max-width:620px;margin:0 auto 22px;text-align:left}.review h3{margin-bottom:8px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+.review li{margin:0 0 8px 18px;color:var(--ink);font-size:14px;line-height:1.5}.review li span{color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.reminder{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.55}
+@media(max-width:620px){.how{grid-template-columns:1fr}.cgm{grid-template-columns:1fr;gap:6px}.reading{flex-direction:row;align-items:baseline;gap:8px;flex-wrap:wrap}.reading .val{font-size:38px}.reading .state{margin:0 0 0 auto}svg.graph{height:120px}.stats{grid-template-columns:1fr 1fr 1fr}.stat b{font-size:24px}}
+@media(max-width:560px){body{padding:0;background:#fff}.shell{min-height:100dvh;border:0;border-radius:0;box-shadow:none}header{padding:15px}.brand{font-size:14px}main{padding:22px 14px}.option{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><div class="logo" aria-hidden="true">✦</div><div class="brand">Diabetes <span>Learning Hub</span></div><a class="home" href="index.html">All games</a></header>
+<main>
+<section id="welcome" class="screen active">
+<div class="eyebrow">Game for parents and carers · Type 1 diabetes</div>
+<h1>A Day with Sam.</h1>
+<p class="lead">Sam is 9 and has Type 1 diabetes. Follow Sam from breakfast to the next morning: school, a hypo, PE, a birthday party, bedtime and a sick day. You make the calls, and Sam’s CGM graph shows what happens next.</p>
+<div class="how">
+<div><b>📈 Watch the graph</b>Every decision moves Sam’s glucose. The green band is the usual 4–10 mmol/L daytime target.</div>
+<div><b>🎯 Choose well</b>Best choices score 2 points and okay choices score 1. Each answer explains why.</div>
+<div><b>⏱️ Time in range</b>At the end you’ll see Sam’s time in range and the lessons worth remembering.</div>
+</div>
+<div class="safety"><strong>Important:</strong> Sam is fictional and the glucose numbers are illustrations. Every child is different. Always follow your child’s own care plan, insulin doses, hypo treatment amounts and targets from their paediatric diabetes team.</div>
+<button class="btn" onclick="start()">Start Sam’s day →</button>
+<p class="reminder">Education only. This game cannot replace training or advice from your child’s diabetes team.</p>
+</section>
+
+<section id="game" class="screen" aria-live="polite">
+<div class="progress"><div class="fill" id="fill"></div></div>
+<div class="meta"><span id="counter"></span><span id="points"></span></div>
+<div class="cgm">
+<div class="reading"><span class="lbl">Sam’s CGM</span><span><span class="val" id="val">--</span> <span class="unit">mmol/L</span></span><span class="state" id="state"></span></div>
+<svg class="graph" id="graph" viewBox="0 0 400 150" preserveAspectRatio="none" role="img" aria-label="Sam’s glucose graph"></svg>
+</div>
+<div class="scene"><span class="clock" id="clock"></span><span class="where" id="where"></span></div>
+<h2 class="question" id="question"></h2>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback"></div>
+<div class="nextrow"><button class="btn next" id="next" onclick="nextEvent()">Continue →</button></div>
+</section>
+
+<section id="results" class="screen result">
+<div class="eyebrow">Sam’s day is complete</div>
+<div class="stats">
+<div class="stat"><b id="r-tir"></b><span>Time in range</span></div>
+<div class="stat"><b id="r-pts"></b><span>Decision points</span></div>
+<div class="stat"><b id="r-best"></b><span>Best choices</span></div>
+</div>
+<h2 id="r-title"></h2>
+<p id="r-copy"></p>
+<div class="review" id="review"></div>
+<div class="actions"><button class="btn" onclick="start()">Play Sam’s day again</button></div>
+<div id="next-games"></div>
+<p class="reminder">Real days are messier than this game: growth, hormones, stress, excitement and illness all move glucose. Results are information for decisions, not a judgement on you or your child.</p>
+</section>
+</main>
+</div>
+<script src="hub.js"></script>
+<script>
+const DUK='https://www.diabetes.org.uk/';
+const events=[
+{time:'07:30',where:'Kitchen · breakfast',reading:6.8,trend:'→',q:'Sam wakes at 6.8 mmol/L and wants a bowl of cereal with milk (about 45 g carbohydrate). What do you do?',
+ o:[{t:'Give the insulin dose for 45 g carbs from Sam’s plan, at the time the plan says (often shortly before eating)',r:'best',after:8.1,f:'Matching mealtime insulin to the carbohydrate keeps the rise after breakfast small. Many teams suggest giving it a little before eating, but follow your own plan.'},
+    {t:'Skip the insulin: 6.8 is already in range',r:'poor',after:15.4,f:'Insulin is for the food, not only for the reading. Without it, the 45 g of carbohydrate sends Sam high by mid-morning.'},
+    {t:'Give a bit extra insulin “to be safe” in case Sam gets hungry later',r:'poor',after:3.4,f:'Extra insulin without extra food can cause a hypo before break time. Doses should match the carbs eaten, using Sam’s ratio.'}],
+ learn:'Mealtime insulin matches the food eaten, even when the glucose is already in range.',src:DUK+'living-with-diabetes/eating/carbohydrates-and-diabetes/learn-about-carb-counting',srcl:'Diabetes UK: carb counting'},
+{time:'10:35',where:'School · maths lesson',reading:3.6,trend:'↘',q:'The school calls: Sam feels shaky and the CGM shows 3.6 mmol/L and falling. What should staff do?',
+ o:[{t:'Give Sam’s agreed amount of fast-acting carbohydrate now (e.g. glucose tablets or juice), then recheck in 10–15 minutes',r:'best',after:3.8,f:'Under 4 is a hypo: “4 is the floor”. Fast-acting sugar works quickly. Then recheck, because one treatment isn’t always enough.'},
+    {t:'Give a chocolate bar from the tuck shop',r:'ok',after:3.5,f:'Better than nothing, but the fat in chocolate slows the sugar down. Fast-acting carbs like glucose tablets or juice work much faster.'},
+    {t:'Wait until lunch in an hour, since it isn’t far away',r:'poor',after:2.7,f:'A falling hypo needs treating straight away. Waiting can let it become severe.'}],
+ learn:'Under 4 mmol/L, treat straight away with fast-acting carbs (not chocolate), then recheck.',src:DUK+'about-diabetes/looking-after-diabetes/complications/hypos',srcl:'Diabetes UK: hypos'},
+{time:'10:50',where:'School · first aid room',reading:3.8,trend:'→',q:'15 minutes after treatment, Sam is still 3.8 mmol/L. What next?',
+ o:[{t:'Repeat the fast-acting treatment and recheck again; follow up with a starchy snack if the plan says so',r:'best',after:5.9,f:'Still under 4 means the hypo isn’t over. Treat again and recheck. Many plans then add a starchy snack if a meal isn’t due soon.'},
+    {t:'It’s close to 4, so send Sam back to class',r:'poor',after:3.2,f:'3.8 is still a hypo. Going back to class too soon risks Sam dropping again during the lesson.'},
+    {t:'Give a small insulin dose to “balance things out”',r:'poor',after:2.4,f:'Insulin lowers glucose. It should never be given to treat a hypo.'}],
+ learn:'If still under 4 after treating, treat again. A hypo isn’t over until the reading is back above 4.',src:DUK+'about-diabetes/looking-after-diabetes/complications/hypos',srcl:'Diabetes UK: treating hypos'},
+{time:'12:30',where:'School · lunch hall',reading:6.4,trend:'→',q:'School dinner is pasta bake and a yoghurt, but nobody knows the exact carbs. What’s the best approach?',
+ o:[{t:'Use the school’s carb information or a carb-counting app to make a sensible estimate, dose for that, and check the CGM later',r:'best',after:8.6,f:'A reasonable estimate is far better than no insulin. Many schools share carb counts for menus, and patterns help you fine-tune over time.'},
+    {t:'Skip the insulin today because the carbs are unknown',r:'poor',after:16.2,f:'Pasta bake is carb-heavy. Without insulin, Sam’s glucose will climb steeply through the afternoon.'},
+    {t:'Guess very high to be safe',r:'poor',after:3.3,f:'Over-estimating carbs means too much insulin, which can lead to a hypo mid-afternoon.'}],
+ learn:'Estimate carbs as best you can. A sensible estimate beats skipping insulin or guessing high.',src:DUK+'living-with-diabetes/eating/carbohydrates-and-diabetes/learn-about-carb-counting',srcl:'Diabetes UK: carb counting'},
+{time:'14:00',where:'School · before PE (football)',reading:7.2,trend:'→',q:'Football starts in 30 minutes. Sam is 7.2 mmol/L and steady. How should Sam get ready?',
+ o:[{t:'Follow the exercise plan (for example, extra carbs before or a pump exercise setting), and make sure hypo treatment goes to the pitch',r:'best',after:6.3,f:'Activity uses glucose, so planning ahead (snack, insulin change or pump activity mode as advised) with hypo treatment nearby keeps PE fun and safe.'},
+    {t:'Just play; the hypo kit can stay in the classroom',r:'poor',after:3.1,f:'Exercise often lowers glucose. Without a plan or hypo treatment nearby, a low during the match is more likely and harder to treat quickly.'},
+    {t:'Sit Sam out of PE to avoid any risk',r:'ok',after:7.0,f:'No hypo, but activity is good for Sam and children with Type 1 can take part in sport. With a plan, Sam doesn’t have to miss out.'}],
+ learn:'Children with Type 1 can do sport. Plan the carbs/insulin, and keep hypo treatment close.',src:DUK+'living-with-diabetes/life-with-diabetes/children-and-diabetes/physical-activity',srcl:'Diabetes UK: physical activity and your child'},
+{time:'16:30',where:'Home · after school',reading:15.1,trend:'↗',q:'Sam is home, thirsty and grumpy, at 15.1 mmol/L. What do you do?',
+ o:[{t:'Check blood ketones as the plan directs at this level, give a correction dose if the plan says, offer water and recheck',r:'best',after:9.2,f:'High glucose can come with ketones, so check them. Ketones under 0.6 mmol/L are normal. A correction from the plan and water help bring Sam back down.'},
+    {t:'Give a sugary drink because Sam seems grumpy',r:'poor',after:18.3,f:'Grumpiness can come with highs as well as lows. Always check the reading first. Sugar on top of a high makes it higher.'},
+    {t:'Leave it, it will come down on its own',r:'ok',after:13.4,f:'It may drift down, but checking ketones and following the correction plan is safer and quicker.'}],
+ learn:'Highs can make children grumpy too. Check before treating, and check ketones when high.',src:'https://www.nhs.uk/conditions/diabetic-ketoacidosis/',srcl:'NHS: diabetic ketoacidosis'},
+{time:'18:00',where:'Friend’s birthday party',reading:7.6,trend:'→',q:'There’s birthday cake at the party, and Sam really wants a slice. What do you do?',
+ o:[{t:'Estimate the carbs in the slice, give insulin for it as normal, and let Sam enjoy the party',r:'best',after:9.4,f:'With insulin to match, treats like birthday cake can fit in. Being included matters to children.'},
+    {t:'Say no. Children with diabetes can’t have cake',r:'ok',after:7.3,f:'Glucose stays steady, but it isn’t necessary. Children with Type 1 can have occasional treats with the right insulin, and missing out can make diabetes feel unfair.'},
+    {t:'Let Sam eat it without insulin, it’s a special day',r:'poor',after:17.6,f:'Cake is mostly fast carbs and sugar. Without insulin, Sam goes high for the evening.'}],
+ learn:'Treats can fit with matched insulin. Children with Type 1 don’t have to miss out.',src:DUK+'living-with-diabetes/eating',srcl:'Diabetes UK: eating with diabetes'},
+{time:'21:00',where:'Home · bedtime',reading:5.4,trend:'↘',q:'Bedtime: Sam is 5.4 mmol/L and drifting down after a busy day with football. What’s wise?',
+ o:[{t:'Follow the plan for after exercise (e.g. a bedtime snack or a lower overnight setting), and make sure CGM low alarms are on',r:'best',after:6.2,f:'Exercise can lower glucose for many hours, including overnight. A plan for after-sport nights plus alarms protects Sam’s sleep.'},
+    {t:'Nothing extra, 5.4 is in range',r:'poor',after:3.1,f:'In range now but falling after exercise. Without a plan, Sam could go low around 3am.'},
+    {t:'Give a correction dose to keep things tight',r:'poor',after:2.6,f:'Insulin when already in range and dropping makes a night hypo very likely.'}],
+ learn:'Exercise can cause lows hours later, especially overnight. Plan for it and use CGM alarms.',src:DUK+'living-with-diabetes/exercise',srcl:'Diabetes UK: exercise'},
+{time:'07:15',where:'Next morning · Sam is ill',reading:14.2,trend:'↗',q:'Next morning Sam has been sick twice. Glucose is 14.2 mmol/L and blood ketones are 1.8 mmol/L. What’s right?',
+ o:[{t:'Keep giving insulin using the sick-day rules, and contact the diabetes team or NHS 111 now for advice. Don’t wait.',r:'best',after:10.4,f:'Vomiting with raised ketones is a warning sign for DKA. Never stop insulin. Follow the sick-day rules and get urgent advice straight away. If Sam becomes drowsy or breathes fast and deep, call 999.'},
+    {t:'Stop insulin because Sam can’t keep food down',r:'poor',after:21.0,f:'Stopping insulin during illness is how DKA develops. The body still needs insulin even when not eating.'},
+    {t:'Let Sam sleep it off and check again this evening',r:'poor',after:19.5,f:'Ketones of 1.8 plus vomiting needs action now, not later. DKA can develop within hours, especially in children.'}],
+ learn:'Never stop insulin when ill. Vomiting with ketones means get urgent advice now.',src:'https://www.nhs.uk/conditions/diabetic-ketoacidosis/',srcl:'NHS: DKA and when to get help'}
+];
+let i=0,pts=0,best=0,readings=[],missed=[],answered=false;
+const $=id=>document.getElementById(id);
+function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
+function cls(v){return v<4?'low':v>10?'high':'ok'}
+function label(v){return v<4?'⚠️ Hypo (below 4)':v>10?'Above range':'In range'}
+function setReading(v,trend){const e=$('val');e.textContent=v.toFixed(1);e.className='val '+cls(v);$('state').textContent=(trend?trend+' ':'')+label(v)}
+function y(v){v=Math.max(2,Math.min(22,v));return 140-(v-2)/20*130}
+function draw(){const g=$('graph'),W=400,n=events.length*2,step=(W-20)/(n-1);let h='';
+ h+='<rect x="0" y="'+y(10)+'" width="'+W+'" height="'+(y(3.9)-y(10))+'" fill="#2f7d61" opacity=".28"/>';
+ h+='<line x1="0" x2="'+W+'" y1="'+y(3.9)+'" y2="'+y(3.9)+'" stroke="#ff8a8a" stroke-dasharray="4 4" stroke-width="1"/>';
+ [4,10].forEach(v=>h+='<text x="4" y="'+(y(v)-3)+'" fill="#8fb5a6" font-size="10" font-family="DM Sans,sans-serif">'+v+'</text>');
+ if(readings.length>1){h+='<polyline fill="none" stroke="#e8f3ee" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" points="'+readings.map((v,k)=>(10+k*step).toFixed(1)+','+y(v).toFixed(1)).join(' ')+'"/>'}
+ readings.forEach((v,k)=>{h+='<circle cx="'+(10+k*step).toFixed(1)+'" cy="'+y(v).toFixed(1)+'" r="'+(k===readings.length-1?5:3.2)+'" fill="'+(v<4?'#ff8a8a':v>10?'#ffc56b':'#8fe3bd')+'"/>'});
+ g.innerHTML=h}
+function start(){i=0;pts=0;best=0;readings=[];missed=[];show('game');render()}
+function render(){answered=false;const e=events[i];readings.push(e.reading);draw();setReading(e.reading,e.trend);
+ $('fill').style.width=(i/events.length*100)+'%';$('counter').textContent='Moment '+(i+1)+' of '+events.length;$('points').textContent=pts+' pts';
+ $('clock').textContent=e.time;$('where').textContent=e.where;$('question').textContent=e.q;
+ const box=$('options');box.innerHTML='';e.order=shuffle(e.o);e.order.forEach((o,k)=>{const b=document.createElement('button');b.className='option';b.textContent=o.t;b.onclick=()=>choose(k);box.appendChild(b)});
+ const f=$('feedback');f.className='feedback';f.innerHTML='';$('next').classList.remove('show')}
+function choose(k){if(answered)return;answered=true;const e=events[i],o=e.order[k];
+ pts+=o.r==='best'?2:o.r==='ok'?1:0;if(o.r==='best')best++;else missed.push(e);
+ [...document.querySelectorAll('.option')].forEach((b,j)=>{b.disabled=true;const r=e.order[j].r;if(j===k)b.classList.add(r);else if(r==='best')b.classList.add('best');else b.classList.add('dim')});
+ readings.push(o.after);draw();setReading(o.after,o.after>e.reading?'↗':o.after<e.reading?'↘':'→');
+ const f=$('feedback');f.className='feedback show '+o.r;
+ const lead=document.createElement('strong');lead.textContent=(o.r==='best'?'Great call. ':o.r==='ok'?'Okay, but there’s a better option. ':'Not this time. ')+'Sam is now '+o.after.toFixed(1)+' mmol/L. ';
+ f.appendChild(lead);f.appendChild(document.createTextNode(o.f));f.appendChild(document.createElement('br'));
+ const a=document.createElement('a');a.className='evidence';a.href=e.src;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Read more: '+e.srcl+' ↗';f.appendChild(a);
+ $('points').textContent=pts+' pts';$('next').textContent=i<events.length-1?'Continue →':'See Sam’s day →';$('next').classList.add('show');$('next').focus({preventScroll:true})}
+function nextEvent(){i++;if(i<events.length){render();return}finish()}
+function finish(){show('results');const max=events.length*2,inR=readings.filter(v=>v>=3.9&&v<=10).length,tir=Math.round(inR/readings.length*100);
+ $('r-tir').textContent=tir+'%';$('r-pts').textContent=pts+'/'+max;$('r-best').textContent=best+'/'+events.length;
+ let t,c;if(pts>=16){t='Sam had a great day';c='You made confident, safe decisions all day. That’s exactly the kind of thinking that keeps a child safe while letting them enjoy school, sport and parties.'}
+ else if(pts>=11){t='A solid day';c='You handled most moments well. Look at the lessons below. They’re the situations that catch lots of families out.'}
+ else{t='A tricky day, and that’s how we learn';c='Diabetes days throw a lot at you. Read the lessons below, compare them with your child’s care plan, and try Sam’s day again.'}
+ $('r-title').textContent=t;$('r-copy').textContent=c;
+ const rv=$('review');if(missed.length){rv.innerHTML='<h3>Lessons to remember</h3><ul>'+missed.map(e=>'<li>'+Hub.esc(e.learn)+' <span>('+e.time+')</span></li>').join('')+'</ul>'}else rv.innerHTML='<h3>Perfect run</h3><ul><li>You picked the best option at every moment. Try the Symptom Sorter next to test how quickly you spot warning signs.</li></ul>';
+ Hub.record('day-with-sam',pts,max);Hub.renderNext($('next-games'),'day-with-sam',{shareText:'I helped Sam through a day with Type 1 diabetes: '+tir+'% time in range. Can you beat it?'})}
+</script>
+</body>
+</html>

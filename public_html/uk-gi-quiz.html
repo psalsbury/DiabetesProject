@@ -424,11 +424,17 @@
   @media (max-height: 500px) and (orientation: landscape) {
     .zone { min-height: 104px; }
   }
+  .hub-home { display: inline-block; margin: 0 0 10px; color: #cfe3d8; font: 600 13px var(--sans); text-decoration: none; }
+  .hub-home:hover { text-decoration: underline; }
+  .panel.final { max-width: 560px; max-height: calc(100dvh - 48px); overflow-y: auto; }
+  .panel .dlh-next .dlh-row { grid-template-columns: 1fr; }
+  .panel .dlh-next a.dlh-card { text-align: left; }
 </style>
 </head>
 <body>
 
 <div class="stage">
+  <a class="hub-home" href="index.html">&larr; Diabetes Learning Hub</a>
   <header class="top">
     <h1>Glycemic Sort</h1>
     <div class="scoreline" id="scoreline">Score 0 / 0</div>
@@ -467,6 +473,7 @@
     <span class="big-score" id="panelScore"></span>
     <p id="panelText"></p>
     <button class="next-btn" id="panelBtn">Next level</button>
+    <div id="next-games"></div>
   </div>
 </div>
 
@@ -824,6 +831,14 @@
       ? "You've sorted breads, rice, pasta and potatoes by glycemic index. Final score: " + totalScore + " / " + totalPossible + "."
       : "Next up: " + LEVELS[levelIndex + 1].name + ".";
     panelBtnEl.textContent = isLast ? "Play again" : "Next level";
+    var nextEl = document.getElementById("next-games");
+    nextEl.innerHTML = "";
+    nextEl.className = "";
+    document.querySelector(".panel").classList.toggle("final", isLast);
+    if (isLast && window.Hub) {
+      Hub.record("uk-gi", totalScore, totalPossible);
+      Hub.renderNext(nextEl, "uk-gi", { shareText: "I scored " + totalScore + "/" + totalPossible + " sorting UK foods by GI at the Diabetes Learning Hub. Give it a try:" });
+    }
     overlayEl.classList.add("show");
   }
 
@@ -841,6 +856,7 @@
   startLevel(0);
 })();
 </script>
+<script src="hub.js"></script>
 
 </body>
 </html>

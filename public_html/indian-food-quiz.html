@@ -19,7 +19,7 @@ h1{font:700 clamp(34px,6vw,52px)/1.05 'Fraunces',serif;color:var(--brown)}.intro
 <body><main class="app">
 <div class="top"><a class="home" href="index.html">← Learning Hub</a><span class="pill">Asian foods</span></div>
 <section id="game"><h1>Which is the better everyday choice?</h1><p class="intro">Choose the option that is generally more supportive of blood-glucose management. Think fibre, whole grains, pulses, portion size and added sugar.</p><div class="progress"><div class="fill" id="fill"></div></div><div class="meta"><span id="count">Question 1 of 10</span><span id="running">Score 0</span></div><h2 class="question" id="question"></h2><div class="choices"><button class="choice" id="a"></button><button class="choice" id="b"></button></div><div class="feedback" id="feedback"></div><button class="next" id="next">Next question →</button></section>
-<section class="result" id="result"><div class="score" id="score"></div><h2 id="resultTitle"></h2><p id="resultText"></p><button class="again" id="again">Play again</button></section>
+<section class="result" id="result"><div class="score" id="score"></div><h2 id="resultTitle"></h2><p id="resultText"></p><button class="again" id="again">Play again</button><div id="next-games"></div></section>
 <p class="note"><strong>General guidance only:</strong> portions, recipes, cooking methods and individual responses matter. “Better everyday choice” does not mean unlimited. Check your glucose response and follow advice from your diabetes healthcare team.</p>
 </main>
 <script>
@@ -43,4 +43,9 @@ function answer(c){if(answered)return;answered=true;const x=Q[i],right=c===x.ok;
 els.a.onclick=()=>answer("a");els.b.onclick=()=>answer("b");els.n.onclick=()=>{i++;if(i<Q.length)render();else finish()};
 function finish(){document.getElementById("game").style.display="none";document.getElementById("result").className="result show";document.getElementById("score").textContent=score+"/10";document.getElementById("resultTitle").textContent=score>=8?"Excellent choices":score>=5?"A useful start":"Keep learning";document.getElementById("resultText").textContent=score>=8?"You consistently identified the higher-fibre, lower-sugar everyday options.":score>=5?"You have a good foundation. Review the explanations and try again to reinforce the swaps.":"Food choices can be tricky. Try again and use each explanation as a practical swap to remember."}
 document.getElementById("again").onclick=()=>{i=0;score=0;document.getElementById("game").style.display="block";document.getElementById("result").className="result";render()};render();
-</script></body></html>
+</script>
+<script src="hub.js"></script>
+<script>
+(function(){const base=finish;finish=function(){base();Hub.record('asian-food',score,10);Hub.renderNext(document.getElementById('next-games'),'asian-food',{shareText:'I scored '+score+'/10 on the Asian Food Choices quiz at the Diabetes Learning Hub. Give it a try:'})}})();
+</script>
+</body></html>
