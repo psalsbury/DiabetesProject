@@ -38,3 +38,12 @@ Static quiz site served at https://salsbury.co.uk.
 ## Deploying
 
 Copy the contents of `public_html/` to the live web root.
+
+## A Day with Sam daily adventures
+
+- `public_html/sam-days.js` stores 90 six-moment day manifests: 30 settings with three story paths, built from shared teaching templates. Individual lessons recur; complete day scenarios do not repeat within the 90-day cycle.
+- The daily index uses the Europe/London calendar date, anchored on 4 October 2026, including daylight-saving changes. Everyone sees the same adventure. Replay uses today's date; a game already underway remains on its starting day.
+- Daily best decision points are saved only on the device in `dlh-sam-daily-v1`. General progress continues through `Hub.record`.
+- Glucose values are fictional independent checkpoints, not physiological predictions. The game reports readings in range rather than clinical time in range.
+- Care feedback links to Diabetes UK and NHS guidance; insulin decisions refer to the child's agreed care plan.
+- Run `node tests/sam-days.cjs` for the 90-day schedule, UK midnight/DST, content validation and 180 complete game-script runs.
