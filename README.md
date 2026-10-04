@@ -51,3 +51,9 @@ Copy the contents of `public_html/` to the live web root.
 ## Website language selector
 
 Every HTML page loads `language.js`. It adds a keyboard-accessible language menu with flags and native names for English (en), Urdu (ur), Somali (so), Arabic (ar), Farsi (fa), Portuguese (pt), Italian (it), and Swedish (sv). Non-English links open the current public page in Google's automatic website-translation view; English returns to the original site. No external translation resource loads until a link is selected. This is external machine translation, not built-in reviewed translations, and availability depends on Google Translate. Scores in a translated copy may use a separate browser origin. Bump the language.js version in all pages when updating it.
+
+## Installable app and offline games
+
+The compact header contains the logo and language menu; FAQ is a collapsible footer section. All pages load `pwa.js`, which registers `/sw.js` on the original site and offers a footer Install app action. Chromium's native install prompt is used when available; other browsers receive platform-specific instructions. The manifest defines the app identity, scope, standalone display and 192/512 pixel icons.
+
+The service worker precaches public English game pages and local assets, and uses network-first retrieval with a cache fallback. External translation and guidance links still need an internet connection. Browser scores remain local. On each release bump the cache name in sw.js and keep ASSETS query versions aligned with HTML script versions. Run `node tests/pwa.cjs` for manifest and offline-cache checks.

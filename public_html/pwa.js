@@ -1,0 +1,30 @@
+/* Install controls and offline registration for the original site. */
+(function(){
+'use strict';
+if(location.hostname!=='salsbury.co.uk'&&location.hostname!=='www.salsbury.co.uk')return;
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'}).catch(function(e){console.warn('Offline mode unavailable',e);});});}
+var deferred=null,button=null,standalone=window.matchMedia('(display-mode: standalone)');
+function installed(){return standalone.matches||navigator.standalone===true;}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(button)button.textContent='Install app';});
+window.addEventListener('appinstalled',function(){deferred=null;if(button)button.hidden=true;});
+function mount(){
+ if(document.getElementById('dlh-install')||installed())return;
+ var style=document.createElement('style');style.textContent='.dlh-install{padding:8px 14px;border:1px solid #c5dbcf;border-radius:99px;color:#173f35;background:#fff;font:700 13px Nunito,system-ui,sans-serif;cursor:pointer}.dlh-install[hidden]{display:none}.dlh-install:focus-visible{outline:3px solid #e7ae43;outline-offset:3px}.dlh-install-dialog{width:min(430px,calc(100% - 28px));margin:auto;padding:24px;border:1px solid #dbe6df;border-radius:20px;background:#fff;color:#173f35;font:400 15px/1.6 Nunito,system-ui,sans-serif;box-shadow:0 20px 80px #0003}.dlh-install-dialog::backdrop{background:#10251f88}.dlh-install-dialog h2{font:600 26px Fredoka,system-ui,sans-serif;margin:0 0 12px}.dlh-install-dialog p{margin:12px 0}.dlh-install-dialog button{margin-top:10px}.dlh-install-links{display:flex;gap:12px;align-items:center;flex-wrap:wrap;width:min(100% - 28px,820px);margin:16px auto;text-align:center}.dlh-install-links a{color:#173f35;font:700 13px Nunito,system-ui,sans-serif}';document.head.appendChild(style);
+ button=document.createElement('button');button.type='button';button.id='dlh-install';button.className='dlh-install';button.textContent='Install app';
+ var footer=document.querySelector('footer nav'),more=document.querySelector('.more-games');
+ if(footer)footer.appendChild(button);
+ else{var row=document.createElement('div');row.className='dlh-install-links';var faq=document.createElement('a');faq.href='/#faq';faq.textContent='FAQ';row.appendChild(faq);row.appendChild(button);if(more)more.insertAdjacentElement('afterend',row);else document.body.appendChild(row);}
+ button.addEventListener('click',async function(){if(deferred){var prompt=deferred;deferred=null;await prompt.prompt();await prompt.userChoice;return;}help();});
+ if(standalone.addEventListener)standalone.addEventListener('change',function(){button.hidden=installed();});
+}
+function help(){
+ var dialog=document.getElementById('dlh-install-help');
+ if(!dialog){dialog=document.createElement('dialog');dialog.id='dlh-install-help';dialog.className='dlh-install-dialog';dialog.setAttribute('aria-labelledby','dlh-install-title');
+ dialog.innerHTML='<h2 id="dlh-install-title">Add Diabetes Games</h2><p>Keep the games on your home screen and open them like an app. The English games work offline after your first online visit.</p><p><strong>Android:</strong> open this site in Chrome, tap the ⋮ menu, then <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p><p><strong>iPhone or iPad:</strong> open this site in Safari, tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</p><p><strong>Computer:</strong> look for your browser’s install icon in the address bar or its menu.</p><button type="button" class="dlh-install">Close</button>';
+ dialog.querySelector('button').addEventListener('click',function(){dialog.close();});dialog.addEventListener('click',function(e){if(e.target===dialog){var r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});document.body.appendChild(dialog);}
+ dialog.showModal();
+}
+function revealFAQ(){var faq=document.getElementById('faq');if(faq&&location.hash==='#faq')faq.open=true;}
+window.addEventListener('hashchange',revealFAQ);revealFAQ();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
