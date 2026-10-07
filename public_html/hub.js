@@ -12,7 +12,7 @@ var GAMES=[
  {id:'type1-parent',url:'type1-parent-quiz.html',icon:'🧭',title:'Parent Skills',blurb:'Hypos, ketones, sick days and when to get help.',group:'parents',mins:5},
  {id:'asian-food',url:'indian-food-quiz.html',icon:'🥘',title:'Asian Food Choices',blurb:'Pick the better everyday swap: breads, rice, snacks and sweets.',group:'food',mins:4}
 ];
-function today(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function today(d){var p=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d||new Date()),v={};p.forEach(function(x){v[x.type]=x.value});return v.year+'-'+v.month+'-'+v.day}
 function dayDiff(a,b){return Math.round((Date.parse(b+'T12:00:00')-Date.parse(a+'T12:00:00'))/864e5)}
 function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')return Object.assign({games:{},daily:{},days:[]},s)}catch(e){}return{games:{},daily:{},days:[]}}
 function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}

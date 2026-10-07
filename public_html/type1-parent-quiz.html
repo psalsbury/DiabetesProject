@@ -94,7 +94,7 @@ function answer(choice,button){if(answered)return;answered=true;const x=order[cu
 function nextQuestion(){current++;if(current<questions.length){render();return}showResults()}
 function showResults(){show('results');document.getElementById('score').textContent=score+'/'+questions.length;let title,copy;if(score>=9){title='Excellent awareness';copy='You showed strong knowledge of everyday safety and emergency responses. Keep the child-specific care plan current and accessible.'}else if(score>=7){title='A strong foundation';copy='You understand many of the essentials. Review the evidence links for any scenarios that caught you out.'}else{title='Useful practice';copy='These decisions take practice. Review the explanations, revisit your child’s written care plan and ask the diabetes team to clarify anything uncertain.'}document.getElementById('result-title').textContent=title;document.getElementById('result-copy').textContent=copy}
 </script>
-<script src="hub.js?v=2"></script>
+<script src="hub.js?v=20261007"></script>
 <script>
 (function(){const base=showResults;showResults=function(){base();Hub.record('type1-parent',score,questions.length);Hub.renderNext(document.getElementById('next-games'),'type1-parent',{shareText:'I scored '+score+'/'+questions.length+' on the Type 1 Parent Skills quiz at the Diabetes Learning Hub. Give it a try:'})}})();
 </script>

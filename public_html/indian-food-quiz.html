@@ -52,7 +52,7 @@ els.a.onclick=()=>answer("a");els.b.onclick=()=>answer("b");els.n.onclick=()=>{i
 function finish(){document.getElementById("game").style.display="none";document.getElementById("result").className="result show";document.getElementById("score").textContent=score+"/10";document.getElementById("resultTitle").textContent=score>=8?"Excellent choices":score>=5?"A useful start":"Keep learning";document.getElementById("resultText").textContent=score>=8?"You consistently identified the higher-fibre, lower-sugar everyday options.":score>=5?"You have a good foundation. Review the explanations and try again to reinforce the swaps.":"Food choices can be tricky. Try again and use each explanation as a practical swap to remember."}
 document.getElementById("again").onclick=()=>{i=0;score=0;document.getElementById("game").style.display="block";document.getElementById("result").className="result";render()};render();
 </script>
-<script src="hub.js?v=2"></script>
+<script src="hub.js?v=20261007"></script>
 <script>
 (function(){const base=finish;finish=function(){base();Hub.record('asian-food',score,10);Hub.renderNext(document.getElementById('next-games'),'asian-food',{shareText:'I scored '+score+'/10 on the Asian Food Choices quiz at the Diabetes Learning Hub. Give it a try:'})}})();
 </script>

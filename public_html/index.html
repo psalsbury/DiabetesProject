@@ -113,7 +113,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}footer a{
 .top{z-index:30}
 @media(max-width:600px){.top .wrap{gap:8px}.top .brand{font-size:15px;line-height:1.15;max-width:136px}.top .brand span{display:block}.top .logo{width:32px;height:32px;border-radius:10px}.hero{padding:40px 0 48px}.hero .bubbles{display:none}.cards{grid-template-columns:1fr}.daily,.team{padding:18px}.mf{padding:16px}.rec b{font-size:21px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-</style>
+.daily-links{margin-bottom:18px}section[id],.daily[id]{scroll-margin-top:86px}.label-table{width:100%;border-collapse:collapse;margin:12px 0}.label-table th,.label-table td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}.mf .carb-options{flex-wrap:wrap}.mf .carb-options button{flex:1 1 40%}.card:focus-visible{outline:3px solid var(--green);outline-offset:3px}</style>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -129,7 +129,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}footer a{
 <span class="pill">🎮 Free diabetes games &amp; training</span>
 <h1>Learn about diabetes <em>the fun way.</em></h1>
 <p>Quick games for kids, teens, parents and carers. Free, with no sign-up.</p>
-<div class="cta"><a class="btn sun" href="#games">Pick a game →</a><a class="btn glass" href="#daily">Today’s challenge</a></div>
+<div class="cta"><a class="btn sun" href="#games">Pick a game →</a><a class="btn glass" href="#daily">Daily challenges</a></div>
 </div>
 </section>
 
@@ -143,28 +143,42 @@ footer nav{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}footer a{
 </div>
 </div>
 
-<section class="block" id="daily" aria-labelledby="daily-title">
-<div class="daily">
+<section class="block" id="daily" aria-labelledby="daily-section-title">
+<h2 id="daily-section-title">Daily challenges 📅</h2>
+<p class="sub">A little learning, every day. All three challenges refresh at midnight UK time — come back tomorrow for a new set!</p>
+<p id="daily-progress" class="sub" aria-live="polite"></p>
+<div class="cards daily-links">
+<a class="card c5" href="#myth"><span class="ic" aria-hidden="true">🤔</span><h3>Myth or Fact?</h3><p>Spot the myths in three fresh statements each day.</p><span class="chips"><span>📅 Daily · 2 min</span><span id="myth-status">Ready today</span></span></a>
+<a class="card c2" data-id="day-with-sam" data-group="kids parents" href="day-with-sam.html"><span class="ic" aria-hidden="true">📈</span><h3>A Day with Sam</h3><p>A different adventure every day. Help Sam make six diabetes care decisions.</p><span class="chips"><span>📅 Daily · 6 min</span><span id="sam-status">Ready today</span><span>Teens &amp; parents</span></span></a>
+<a class="card c3" href="#carb-detective"><span class="ic" aria-hidden="true">🔎</span><h3>Carb Detective</h3><p>Crack three food-label puzzles. Can you count the carbs in today’s portions?</p><span class="chips"><span>📅 Daily · 3 min</span><span id="carb-status">Ready today</span></span></a>
+</div>
+<div class="daily" id="myth">
 <div class="daily-top"><h2 id="daily-title">Myth or Fact? 🤔</h2><span class="when" id="daily-when"></span></div>
 <p class="sub" style="margin-bottom:0">3 new ones every day, with 90 to discover. Keep your streak going!</p>
 <div class="mf" id="mf"></div>
 </div>
 </section>
 
+<section class="block" id="carb-detective" aria-labelledby="carb-title"><div class="daily">
+<div class="daily-top"><h2 id="carb-title">Carb Detective 🔎</h2><span class="when">Daily · 3 puzzles</span></div>
+<p class="sub">Read the label, check the portion, crack the case! These are fictional practice labels: always check your own food packaging.</p>
+<div class="mf" id="carb-game"></div>
+<p class="sub" style="margin-top:12px;font-size:14px">Learn the method: <a href="https://www.diabetes.org.uk/guide-to-diabetes/enjoy-food/carbohydrates-and-diabetes/nuts-and-bolts-of-carb-counting/learn-about-carb-counting/how-carbs-interact-with-your-body" target="_blank" rel="noopener noreferrer">Diabetes UK: counting carbs</a>. This puzzle does not calculate insulin doses.</p>
+</div></section>
 <section class="block" id="games" aria-labelledby="games-title">
-<h2 id="games-title">Diabetes games</h2>
-<p class="sub">Each one takes about 5 minutes. Learn something new every time you play.</p>
+<h2 id="games-title">Play anytime 🎮</h2>
+<p class="sub">These games are not daily challenges. Practise as often as you like and try to beat your best score.</p>
 <div class="filters" role="group" aria-label="Filter games">
 <button class="on" data-f="all">All</button><button data-f="kids">Kids &amp; teens</button><button data-f="parents">Parents &amp; carers</button><button data-f="food">Food</button><button data-f="unplayed">Not played</button>
 </div>
 <div class="cards">
-<a class="card c1" data-id="symptom-sorter" data-group="kids parents" href="symptom-sorter.html"><span class="ic" aria-hidden="true">🚦</span><h3>Symptom Sorter</h3><p>Low, high or get help? Sort the signs against the clock.</p><span class="chips"><span>⏱ 4 min</span><span>Everyone</span></span></a>
-<a class="card c2" data-id="day-with-sam" data-group="kids parents" href="day-with-sam.html"><span class="ic" aria-hidden="true">📈</span><h3>A Day with Sam</h3><p>Make the calls for Sam’s day and watch the glucose graph react.</p><span class="chips"><span>⏱ 6 min</span><span>Teens &amp; parents</span></span></a>
-<a class="card c3" data-id="uk-gi" data-group="kids food" href="uk-gi-quiz.html"><span class="ic" aria-hidden="true">🍞</span><h3>High or Low GI?</h3><p>Drag bread, rice, pasta and potatoes into the right box.</p><span class="chips"><span>⏱ 5 min</span><span>Everyone</span></span></a>
-<a class="card c4" data-id="type1-food-groups" data-group="kids parents food" href="type1-food-groups-quiz.html"><span class="ic" aria-hidden="true">🥗</span><h3>Food Groups</h3><p>Carbs, protein, fat and fibre: what do they do to glucose?</p><span class="chips"><span>⏱ 5 min</span><span>Teens &amp; parents</span></span></a>
-<a class="card c5" data-id="hcl" data-group="kids parents" href="hybrid-closed-loop-quiz.html"><span class="ic" aria-hidden="true">🔄</span><h3>Closed Loop Pumps</h3><p>Meals, exercise and staying safe on a hybrid closed loop.</p><span class="chips"><span>⏱ 6 min</span><span>Teens &amp; parents</span></span></a>
-<a class="card c6" data-id="type1-parent" data-group="parents" href="type1-parent-quiz.html"><span class="ic" aria-hidden="true">🧭</span><h3>Parent Skills</h3><p>Hypos, ketones, sick days and when to get help.</p><span class="chips"><span>⏱ 5 min</span><span>Parents &amp; carers</span></span></a>
-<a class="card c7" data-id="asian-food" data-group="food" href="indian-food-quiz.html"><span class="ic" aria-hidden="true">🥘</span><h3>Asian Food Choices</h3><p>Pick the better everyday swap: breads, rice, snacks and sweets.</p><span class="chips"><span>⏱ 4 min</span><span>Everyone</span></span></a>
+<a class="card c1" data-id="symptom-sorter" data-group="kids parents" href="symptom-sorter.html"><span class="ic" aria-hidden="true">🚦</span><h3>Symptom Sorter</h3><p>Low, high or get help? Sort the signs against the clock.</p><span class="chips"><span>🎮 Anytime · 4 min</span><span>Everyone</span></span></a>
+
+<a class="card c3" data-id="uk-gi" data-group="kids food" href="uk-gi-quiz.html"><span class="ic" aria-hidden="true">🍞</span><h3>High or Low GI?</h3><p>Drag bread, rice, pasta and potatoes into the right box.</p><span class="chips"><span>🎮 Anytime · 5 min</span><span>Everyone</span></span></a>
+<a class="card c4" data-id="type1-food-groups" data-group="kids parents food" href="type1-food-groups-quiz.html"><span class="ic" aria-hidden="true">🥗</span><h3>Food Groups</h3><p>Carbs, protein, fat and fibre: what do they do to glucose?</p><span class="chips"><span>🎮 Anytime · 5 min</span><span>Teens &amp; parents</span></span></a>
+<a class="card c5" data-id="hcl" data-group="kids parents" href="hybrid-closed-loop-quiz.html"><span class="ic" aria-hidden="true">🔄</span><h3>Closed Loop Pumps</h3><p>Meals, exercise and staying safe on a hybrid closed loop.</p><span class="chips"><span>🎮 Anytime · 6 min</span><span>Teens &amp; parents</span></span></a>
+<a class="card c6" data-id="type1-parent" data-group="parents" href="type1-parent-quiz.html"><span class="ic" aria-hidden="true">🧭</span><h3>Parent Skills</h3><p>Hypos, ketones, sick days and when to get help.</p><span class="chips"><span>🎮 Anytime · 5 min</span><span>Parents &amp; carers</span></span></a>
+<a class="card c7" data-id="asian-food" data-group="food" href="indian-food-quiz.html"><span class="ic" aria-hidden="true">🥘</span><h3>Asian Food Choices</h3><p>Pick the better everyday swap: breads, rice, snacks and sweets.</p><span class="chips"><span>🎮 Anytime · 4 min</span><span>Everyone</span></span></a>
 </div>
 </section>
 
@@ -301,7 +315,7 @@ const t=Hub.today(),dayNo=Math.floor(Date.parse(t+'T12:00:00')/864e5);
 function seeded(n,seed){const a=[...Array(n).keys()];let x=seed>>>0;const r=()=>{x=(x+0x6D2B79F5)>>>0;let t=Math.imul(x^(x>>>15),1|x);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296};for(let k=n-1;k>0;k--){const j=Math.floor(r()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
 const DAYS=Math.ceil(MF.length/3),cycle=Math.floor(dayNo/DAYS),dayInCycle=dayNo%DAYS,perm=seeded(MF.length,20261004+cycle*7919),todays=[0,1,2].map(k=>MF[perm[(dayInCycle*3+k)%MF.length]]);
 let q=[],qi=0,qs=0,bonus=false;
-function daily(){const s=Hub.load();$('daily-when').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+function daily(){const s=Hub.load();$('daily-when').textContent=new Date().toLocaleDateString('en-GB',{timeZone:'Europe/London',weekday:'long',day:'numeric',month:'long'});
  if(s.daily[t]){doneView(s.daily[t]);return}q=todays;qi=0;qs=0;bonus=false;ask()}
 function ask(){const it=q[qi],box=$('mf');box.innerHTML='<div class="n">'+(bonus?'Bonus ':'')+(qi+1)+' of '+q.length+'</div><div class="st"></div><div class="row"><button type="button" data-v="1">✅ Fact</button><button type="button" data-v="0">❌ Myth</button></div><div class="ex"></div><button class="btn dark more" type="button"></button>';
  box.querySelector('.st').textContent=it.s;box.querySelectorAll('.row button').forEach(b=>b.onclick=()=>answer(b.dataset.v==='1',b))}
@@ -311,8 +325,8 @@ function answer(v,btn){const it=q[qi],ok=v===it.f,box=$('mf');if(ok)qs++;
  const m=box.querySelector('.more');m.textContent=qi<q.length-1?'Next →':'Finish';m.classList.add('show');m.focus({preventScroll:true});
  m.onclick=()=>{qi++;if(qi<q.length){ask();return}
   if(bonus){$('mf').innerHTML='<div class="done"><b>Bonus: '+qs+'/'+q.length+'</b><p>Nice! See you tomorrow.</p></div>';return}
-  const s=Hub.load();s.daily[t]={score:qs,max:q.length};Hub.save(s);Hub.markDay();if(qs===q.length)Hub.celebrate();doneView(s.daily[t]);paint()}}
-function doneView(r){const st=Hub.streak();$('mf').innerHTML='<div class="done"><b>'+(r.score===r.max?'🌟 ':'')+'Today: '+r.score+'/'+r.max+(st>1?' · 🔥 '+st+' days':'')+'</b><p>Come back tomorrow for 3 more.</p><div class="cta"><button class="btn dark" type="button" id="bonus">3 bonus questions</button><button class="btn light" type="button" id="share-daily">Challenge a friend ↗</button></div></div>';
+  const s=Hub.load();s.daily[t]={score:qs,max:q.length};Hub.save(s);Hub.markDay();window.dispatchEvent(new Event("daily-progress"));if(qs===q.length)Hub.celebrate();doneView(s.daily[t]);paint()}}
+function doneView(r){const st=Hub.streak();$('mf').innerHTML='<div class="done"><b>'+(r.score===r.max?'🌟 ':'')+'Today: '+r.score+'/'+r.max+(st>1?' · 🔥 '+st+' days':'')+'</b><p>Come back tomorrow for 3 fresh statements. New challenges arrive at midnight UK time.</p><div class="cta"><button class="btn dark" type="button" id="bonus">3 bonus questions</button><button class="btn light" type="button" id="share-daily">Challenge a friend ↗</button></div></div>';
  $('bonus').onclick=()=>{const used=new Set(todays);q=MF.filter(x=>!used.has(x)).sort(()=>Math.random()-.5).slice(0,3);qi=0;qs=0;bonus=true;ask()};
  $('share-daily').onclick=function(){Hub.share('I got '+r.score+'/'+r.max+' on today’s diabetes Myth or Fact. Can you beat me?',this,'https://salsbury.co.uk/')}}
 function paint(){const s=Hub.load(),G=Hub.GAMES,played=G.filter(g=>s.games[g.id]).length,b=Hub.badges(),got=b.filter(x=>x.got).length;
@@ -324,10 +338,11 @@ function paint(){const s=Hub.load(),G=Hub.GAMES,played=G.filter(g=>s.games[g.id]
 document.querySelectorAll('.filters button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters button').forEach(x=>x.classList.toggle('on',x===b));const f=b.dataset.f,s=Hub.load();
  document.querySelectorAll('.card[data-id]').forEach(c=>{const show=f==='all'||(f==='unplayed'?!s.games[c.dataset.id]:c.dataset.group.split(' ').includes(f));c.classList.toggle('hide',!show)})});
 $('share-site').onclick=function(){Hub.share('Free diabetes games: learn how to spot and treat a hypo in 5 minutes.',this,'https://salsbury.co.uk/')};
-$('reset').onclick=()=>{if(confirm('Clear your scores, streak and badges on this device?')){try{localStorage.removeItem('dlh-progress-v1');localStorage.removeItem('dlh-sorter-best')}catch(e){}location.reload()}};
+$('reset').onclick=()=>{if(confirm('Clear your scores, streak and badges on this device?')){try{localStorage.removeItem('dlh-progress-v1');localStorage.removeItem('dlh-sorter-best');localStorage.removeItem('dlh-carb-daily-v1');localStorage.removeItem('dlh-sam-daily-v1')}catch(e){}location.reload()}};
 paint();daily();
 })();
 </script>
+<script src="/daily-challenges.js?v=20261007"></script>
 <script src="/language.js?v=20261004-2"></script>
 <script src="/pwa.js?v=20261004-2"></script>
 </body>
