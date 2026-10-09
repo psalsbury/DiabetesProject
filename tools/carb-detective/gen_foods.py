@@ -53,6 +53,46 @@ F = [
  ('🌽', 'Sweetcorn, canned and drained', '13-529', '3 heaped serving spoons, one of your 5 A DAY', 80),
  ('🍇', 'Raisins', '14-393', '1 heaped serving spoon, one of your 5 A DAY', 30),
 ]
+# Children aged 5-11: portions from the Caroline Walker Trust "Eating well for 5-11 year olds" photo resources (2010),
+# which "meet the needs of an average 5-11 year old". Counts are only given where the item is a single obvious unit
+# or the Trust states it (1 and a half wheat biscuits).
+KIDS = [
+ ('🥣', 'Cornflakes (no milk)', '11-742', 'a child’s bowl', 30),
+ ('🥣', 'Crisped rice cereal (no milk)', '11-750', 'a child’s bowl', 30),
+ ('🥣', 'Puffed wheat cereal (no milk)', '11-756', 'a child’s bowl', 30),
+ ('🥣', 'Shredded wheat-type cereal (no milk)', '11-775', 'a child’s bowl', 25),
+ ('🥣', 'Wheat biscuits, Weetabix-type (no milk)', '11-773', '1½ biscuits', 30),
+ ('🥣', 'Swiss-style muesli (no milk)', '11-780', 'a child’s bowl', 40),
+ ('🥣', 'Porridge made with semi-skimmed milk', '11-789', 'a child’s bowl, milk included', 200),
+ ('🍞', 'Wholemeal toast', '11-982', 'toast with a cooked breakfast', 30),
+ ('🥯', 'Plain bagel', '11-970', '1 bagel', 70),
+ ('🫓', 'Crumpet, toasted', '11-989', '1 crumpet', 40),
+ ('🫓', 'White pitta bread', '11-974', '1 small pitta', 50),
+ ('🌯', 'Soft wheat tortilla wrap', '11-925', '1 small wrap', 40),
+ ('🫓', 'Chapati made without fat', '11-459', '1 chapati with a curry', 55),
+ ('🧁', 'Currant bun', '11-1009', '1 small bun', 35),
+ ('🥖', 'Plain breadsticks', '11-826', 'a snack portion', 15),
+ ('🍪', 'Plain oatcakes', '11-823', 'a snack portion', 20),
+ ('🧁', 'Fruit scone', '11-993', '1 small scone', 30),
+ ('🍞', 'Malt loaf', '11-462', 'a packed-lunch portion', 40),
+ ('🍝', 'Spaghetti, boiled', '11-722', 'served with bolognese sauce', 120),
+ ('🍜', 'Egg noodles, boiled', '11-724', 'served with a stir-fry', 120),
+ ('🍚', 'White long grain rice, boiled', '11-862', 'served with a curry', 120),
+ ('🍚', 'Brown rice, boiled', '11-869', 'served with a curry', 120),
+ ('🥔', 'Jacket potato, flesh and skin', '13-491', '1 jacket potato', 170),
+ ('🥔', 'Mashed potato with butter', '13-553', 'served with sausages and beans', 130),
+ ('🥔', 'Roast potatoes in rapeseed oil', '13-534', 'with a roast dinner', 120),
+ ('🫘', 'Baked beans in tomato sauce', '13-532', 'on toast or with a jacket potato', 90),
+ ('🥛', 'Low-fat fruit yogurt', '12-380', '1 pot', 125),
+ ('🥛', 'Plain (natural) yogurt', '12-184', '1 pot', 125),
+ ('🍇', 'Grapes', '14-350', 'one of your 5 A DAY', 80),
+ ('🍇', 'Raisins', '14-393', 'a small handful', 20),
+ ('🍌', 'Banana (peeled)', '14-318', 'one of your 5 A DAY', 80),
+ ('🍎', 'Apple, eaten with skin', '14-319', 'one of your 5 A DAY', 80),
+ ('🌽', 'Sweetcorn, canned and drained', '13-529', 'in a packed lunch', 80),
+]
+which = sys.argv[2] if len(sys.argv) > 2 else 'adult'
+if which == 'kids': F = KIDS
 out = []
 for e, name, code, por, g in F:
     carb, sug = label(code)

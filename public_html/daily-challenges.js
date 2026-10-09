@@ -40,9 +40,45 @@ const foods=[["🥣", "Cornflakes (no milk)", 83.1, 7.1, 40, "a bowl, about 3 ha
  ["🍇", "Grapes", 16.1, 16.1, 80, "a handful, one of your 5 A DAY", "14-350"],
  ["🌽", "Sweetcorn, canned and drained", 13.0, 7.2, 80, "3 heaped serving spoons, one of your 5 A DAY", "13-529"],
  ["🍇", "Raisins", 62.6, 62.6, 30, "1 heaped serving spoon, one of your 5 A DAY", "14-393"]];
+/* Children aged 5-11: same per-100g basis. Portions are from the Caroline Walker Trust "Eating well for 5-11 year olds"
+   photo resources (2010), which "meet the needs of an average 5-11 year old". */
+const foodsKids=[["🥣", "Cornflakes (no milk)", 83.1, 7.1, 30, "a child’s bowl", "11-742"],
+ ["🥣", "Crisped rice cereal (no milk)", 83.5, 11.8, 30, "a child’s bowl", "11-750"],
+ ["🥣", "Puffed wheat cereal (no milk)", 65.5, 0.2, 30, "a child’s bowl", "11-756"],
+ ["🥣", "Shredded wheat-type cereal (no milk)", 64.8, 0.6, 25, "a child’s bowl", "11-775"],
+ ["🥣", "Wheat biscuits, Weetabix-type (no milk)", 66.3, 3.8, 30, "1½ biscuits", "11-773"],
+ ["🥣", "Swiss-style muesli (no milk)", 67.4, 20.8, 40, "a child’s bowl", "11-780"],
+ ["🥣", "Porridge made with semi-skimmed milk", 11.2, 3.9, 200, "a child’s bowl, milk included", "11-789"],
+ ["🍞", "Wholemeal toast", 44.9, 3.1, 30, "toast with a cooked breakfast", "11-982"],
+ ["🥯", "Plain bagel", 52.8, 4.7, 70, "1 bagel", "11-970"],
+ ["🫓", "Crumpet, toasted", 41.5, 3.0, 40, "1 crumpet", "11-989"],
+ ["🫓", "White pitta bread", 50.4, 2.9, 50, "1 small pitta", "11-974"],
+ ["🌯", "Soft wheat tortilla wrap", 49.1, 1.9, 40, "1 small wrap", "11-925"],
+ ["🫓", "Chapati made without fat", 39.8, 1.5, 55, "1 chapati with a curry", "11-459"],
+ ["🧁", "Currant bun", 49.3, 16.1, 35, "1 small bun", "11-1009"],
+ ["🥖", "Plain breadsticks", 66.4, 3.1, 15, "a snack portion", "11-826"],
+ ["🍪", "Plain oatcakes", 57.2, 3.0, 20, "a snack portion", "11-823"],
+ ["🧁", "Fruit scone", 52.1, 18.2, 30, "1 small scone", "11-993"],
+ ["🍞", "Malt loaf", 60.6, 22.2, 40, "a packed-lunch portion", "11-462"],
+ ["🍝", "Spaghetti, boiled", 28.7, 1.0, 120, "served with bolognese sauce", "11-722"],
+ ["🍜", "Egg noodles, boiled", 32.5, 0.0, 120, "served with a stir-fry", "11-724"],
+ ["🍚", "White long grain rice, boiled", 28.3, 0.0, 120, "served with a curry", "11-862"],
+ ["🍚", "Brown rice, boiled", 26.5, 0.1, 120, "served with a curry", "11-869"],
+ ["🥔", "Jacket potato, flesh and skin", 20.7, 1.4, 170, "1 small jacket potato", "13-491"],
+ ["🥔", "Mashed potato with butter", 14.6, 1.1, 130, "served with sausages and beans", "13-553"],
+ ["🥔", "Roast potatoes in rapeseed oil", 24.1, 1.2, 120, "with a roast dinner", "13-534"],
+ ["🫘", "Baked beans in tomato sauce", 13.9, 4.6, 90, "on toast or with a jacket potato", "13-532"],
+ ["🥛", "Low-fat fruit yogurt", 13.1, 12.2, 125, "1 pot", "12-380"],
+ ["🥛", "Plain (natural) yogurt", 7.6, 7.6, 125, "1 pot", "12-184"],
+ ["🍇", "Grapes", 16.1, 16.1, 80, "a snack portion", "14-350"],
+ ["🍇", "Raisins", 62.6, 62.6, 20, "a snack portion", "14-393"],
+ ["🍌", "Banana (peeled)", 20.0, 18.0, 80, "a snack portion", "14-318"],
+ ["🍎", "Apple, eaten with skin", 11.5, 11.5, 80, "a snack portion", "14-319"],
+ ["🌽", "Sweetcorn, canned and drained", 13.0, 7.2, 80, "in a packed lunch", "13-529"]];
 const r1=x=>Math.round(x*10)/10,r0=x=>Math.round(x);
-function puzzle(d,n){
- const food=foods[((d*3+n)*7)%foods.length],[,,carb,sugars,weight]=food;
+function puzzle(d,n,list){
+ list=list||foods;
+ const food=list[((d*3+n)*7+(list===foods?0:16))%list.length],[,,carb,sugars,weight]=food; // children's list starts elsewhere, so the two versions differ each day
  const exact=r1(carb*weight/100),correct=r0(carb*weight/100);
  // Wrong answers are common carb-counting slips, so the feedback can say what went wrong.
  const slips=[[r0(carb),'per100'],[r0(sugars*weight/100),'sugars'],[r0((carb+sugars)*weight/100),'added'],[r0(carb*weight/200),'half'],[r0(carb*weight*1.5/100),'more']];
@@ -52,12 +88,18 @@ function puzzle(d,n){
  const options=[correct,...wrong],shift=(d+n)%4;options.push(...options.splice(0,shift));
  return {food,weight,exact,correct,options,why};
 }
-window.CarbDetective={puzzle};
-let answers=[];try{const s=JSON.parse(localStorage.getItem(STORE)||'null');if(s&&s.key===key&&Array.isArray(s.answers))answers=s.answers.slice(0,3)}catch(e){}
-function save(){try{localStorage.setItem(STORE,JSON.stringify({key,answers}))}catch(e){}}
+window.CarbDetective={puzzle,foods,foodsKids};
+// Two versions, each with its own daily puzzles and progress: adult portions and children's (5-11) portions.
+const MODES={adult:{list:foods,store:STORE,label:'adult portions'},kids:{list:foodsKids,store:STORE+'-kids',label:'children’s portions'}};
+let mode='adult';try{if(localStorage.getItem('dlh-carb-mode')==='kids')mode='kids'}catch(e){}
+function loadAnswers(m){try{const s=JSON.parse(localStorage.getItem(MODES[m].store)||'null');if(s&&s.key===key&&Array.isArray(s.answers))return s.answers.slice(0,3)}catch(e){}return []}
+let answers=loadAnswers(mode);
+function save(){try{localStorage.setItem(MODES[mode].store,JSON.stringify({key,answers}))}catch(e){}}
+function setMode(m){mode=m;answers=loadAnswers(m);try{localStorage.setItem('dlh-carb-mode',m)}catch(e){}
+ document.querySelectorAll('#carb-mode [data-mode]').forEach(b=>{const on=b.dataset.mode===m;b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on))});render()}
 function progress(){
  let sam=null;try{sam=JSON.parse(localStorage.getItem('dlh-sam-daily-v1')||'null')}catch(e){}
- const done=[!!Hub.load().daily[Hub.today()],!!(sam&&sam.key===Hub.today()),answers.length===3&&key===Hub.today()];
+ const done=[!!Hub.load().daily[Hub.today()],!!(sam&&sam.key===Hub.today()),['adult','kids'].some(m=>loadAnswers(m).length===3)&&key===Hub.today()];
  ['myth-status','sam-status','carb-status'].forEach((id,i)=>{$(id).textContent=done[i]?'✓ Completed today':'Ready today'});
  const n=done.filter(Boolean).length;
  $('daily-progress').textContent=n+' of 3 completed today · '+(n===3?'Great work! Return tomorrow to keep learning.':'Finish today’s set, then return tomorrow for three refreshed challenges.');
@@ -66,10 +108,10 @@ function render(){
  const box=$('carb-game');
  if(answers.length===3){
   const score=answers.filter(Boolean).length;
-  box.innerHTML='<div class="done"><b>🔎 Case closed: '+score+'/3</b><p>You’ve finished today’s Carb Detective. Come back tomorrow for new labels and portions!</p><div class="cta"><button class="btn dark" id="carb-share" type="button">Challenge a friend ↗</button><a class="btn light" href="#daily">Today’s other challenges ↑</a></div></div>';
-  $('carb-share').onclick=function(){Hub.share('Carb Detective '+key+': '+score+'/3. Can you crack today’s food-label puzzles?',this,'https://salsbury.co.uk/#carb-detective')};progress();return;
+  box.innerHTML='<div class="done"><b>🔎 Case closed: '+score+'/3</b><p>You’ve finished today’s Carb Detective with '+MODES[mode].label+'. '+(mode==='adult'?'Try the children’s portions too, or come':'Try the adult portions too, or come')+' back tomorrow for new labels and portions!</p><div class="cta"><button class="btn dark" id="carb-share" type="button">Challenge a friend ↗</button><a class="btn light" href="#daily">Today’s other challenges ↑</a></div></div>';
+  $('carb-share').onclick=function(){Hub.share('Carb Detective '+key+(mode==='kids'?' (children’s portions)':'')+': '+score+'/3. Can you crack today’s food-label puzzles?',this,'https://salsbury.co.uk/#carb-detective')};progress();return;
  }
- const n=answers.length,p=puzzle(day,n),f=p.food;
+ const n=answers.length,p=puzzle(day,n,MODES[mode].list),f=p.food;
  box.innerHTML='<div class="n">Case '+(n+1)+' of 3 · '+key+'</div><div class="st">'+f[0]+' <b>'+f[1]+'</b></div><table class="label-table"><caption>Typical values per 100g</caption><tbody><tr><th scope="row">Carbohydrate</th><td>'+f[2]+'g</td></tr><tr><th scope="row">of which sugars</th><td>'+f[3]+'g</td></tr></tbody></table><p class="st">Your portion: '+f[5]+', weighing <b>'+p.weight+'g</b>. How many grams of carbohydrate are in it?</p><div class="row carb-options">'+p.options.map(v=>'<button type="button" data-carb="'+v+'">'+v+'g</button>').join('')+'</div><div class="ex" role="status"></div><button class="btn dark more" type="button"></button>';
  box.querySelectorAll('[data-carb]').forEach(b=>b.onclick=()=>{
   if(box.dataset.answered==='yes')return;box.dataset.answered='yes';
@@ -86,5 +128,6 @@ function render(){
 window.addEventListener('daily-progress',progress);
 window.addEventListener('pageshow',progress);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Hub.today()!==key)location.reload()});
-render();progress();
+document.querySelectorAll('#carb-mode [data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+setMode(mode);progress();
 })();

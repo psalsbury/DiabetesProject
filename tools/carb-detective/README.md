@@ -5,12 +5,19 @@
 1. Download CoFID 2021 (McCance and Widdowson's Composition of Foods Integrated Dataset) from
    https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid
 2. `python cofid_to_json.py CoFID.xlsx full.json` (needs openpyxl)
-3. `python gen_foods.py full.json > foods.json`, then paste the rows into `const foods=[...]`.
-   (The live list says "about 1 nest, cooked" for the egg noodles, edited by hand.)
+3. `python gen_foods.py full.json > foods.json` for adults, or `python gen_foods.py full.json kids > foods-kids.json`
+   for children, then paste the rows into `const foods=[...]` or `const foodsKids=[...]`.
+   (Hand edits in the live lists: adult egg noodles say "about 1 nest, cooked"; for children, fruit, raisins, breadsticks and
+   oatcakes say "a snack portion" because "one of your 5 A DAY" is the adult definition, and the jacket potato is "1 small jacket potato".)
 
 CoFID gives carbohydrate as monosaccharide equivalents. UK food labels give the actual weight, so the
 script converts: starch and oligosaccharides / 1.10, sucrose, maltose and lactose / 1.05, glucose,
 fructose and galactose unchanged. Where CoFID has no sugar breakdown, total sugars / 1.05 is used
 (only chapati, 11-459).
 
-Portions come from the British Nutrition Foundation's "Find your balance" portion guide (2019).
+Adult portions come from the British Nutrition Foundation's "Find your balance" portion guide (2019).
+
+Children's portions (ages 5-11) come from the Caroline Walker Trust's "Eating well for 5-11 year olds" photo resources
+(2010, cwt.org.uk), which "meet the needs of an average 5-11 year old". Some of the PDFs on cwt.org.uk are cut off at 1 MB.
+Full copies are on web.archive.org (e.g. https://web.archive.org/web/2017id_/https://www.cwt.org.uk/wp-content/uploads/2015/02/CHEW-5-11-MAINMEALS.pdf).
+Chips are left out because the guide's chunky chips have no recipe, so the matching CoFID entry is unclear.
